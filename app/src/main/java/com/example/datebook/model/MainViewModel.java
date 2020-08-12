@@ -17,4 +17,8 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<Boolean> getIsFirstTimeUser() { return isFirstTimeUser; }
     public void setIsFirstTimeUser(Boolean isFirstTimeUser) { this.isFirstTimeUser.postValue(isFirstTimeUser); }
 
+    // pass Public Name
+    private MutableLiveData<String> publicName = new MutableLiveData<>();
+    public MutableLiveData<String> getPublicName() { return publicName; }
+    public void setPublicName(String publicName) { this.publicName.postValue(publicName); }
 }

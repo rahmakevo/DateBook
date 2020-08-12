@@ -17,4 +17,5 @@
     <string name="profile_status">This is your Profile Name and shall be Public!</string>
     <string name="status">Hi there, I\'m using DateBook</string>
     <string name="value_true">true</string>
+    <string name="select_gender">Select Gender</string>
 </resources>

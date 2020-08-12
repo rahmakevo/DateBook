@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,12 @@ import android.widget.ProgressBar;
 
 import com.example.datebook.MainActivity;
 import com.example.datebook.R;
+import com.example.datebook.model.MainViewModel;
 
 public class CreateAccountOne extends Fragment {
     private EditText mProfileNameText;
     private ProgressBar progressBar;
+    protected MainViewModel mainViewModel;
     public CreateAccountOne() {
         // Required empty public constructor
     }
@@ -28,6 +31,7 @@ public class CreateAccountOne extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
@@ -65,6 +69,8 @@ public class CreateAccountOne extends Fragment {
             } else {
                 // validate according to policy standard
                 // save name to db in case user does not finish setup
+                progressBar.setVisibility(View.GONE);
+                mainViewModel.setPublicName(mProfileName);
             }
         });
 

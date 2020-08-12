@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.CreateAccountTwo">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:id="@+id/linearLayoutCreateOne">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progress="50"
+                android:id="@+id/progressBarGender"
+                android:progressBackgroundTintMode="src_in"
+                android:progressTint="@color/colorDominant"
+                android:progressBackgroundTint="@color/colorPrimary"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCreateOne"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/app_name"
+            android:id="@+id/createAccountTwoBackButton"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createAccountTwoBackButton"
+            android:id="@+id/textViewName"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/colorBlack"
+            android:text="@string/select_gender"
+            android:textSize="24sp"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/male"
+            app:layout_constraintEnd_toStartOf="@+id/avatar_image_female"
+            android:id="@+id/avatar_image_male"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="@+id/avatar_image_male"
+            app:layout_constraintBottom_toBottomOf="@+id/avatar_image_male"
+            android:src="@drawable/icon_pick"
+            android:id="@+id/icon_pick_male"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/avatar_image_male"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/female"
+            android:id="@+id/avatar_image_female"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="@+id/avatar_image_female"
+            app:layout_constraintBottom_toBottomOf="@+id/avatar_image_female"
+            android:src="@drawable/icon_pick"
+            android:visibility="gone"
+            android:id="@+id/icon_pick_female"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            app:layout_constraintTop_toBottomOf="@+id/avatar_image_female"
+            app:layout_constraintEnd_toEndOf="@+id/avatar_image_female"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_shape_resource"
+            android:text="@string/proceed"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/buttonProceedGender"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
