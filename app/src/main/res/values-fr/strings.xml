@@ -10,4 +10,6 @@
     <string name="phone_not_valid_error">Cher client, le numéro de téléphone n\'est pas valide</string>
     <string name="credential_auth_error">Cher client, Une erreur s\'est produite. Veuillez réessayer!</string>
     <string name="request_permission_error">Cher client, veuillez accorder les autorisations nécessaires pour continuer</string>
+    <string name="profile_name">Nom de profil</string>
+    <string name="profile_status">Ceci est votre nom de profil et doit être public!</string>
 </resources>

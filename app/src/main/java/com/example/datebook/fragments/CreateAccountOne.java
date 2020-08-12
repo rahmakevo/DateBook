@@ -10,13 +10,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.datebook.MainActivity;
 import com.example.datebook.R;
 
 public class CreateAccountOne extends Fragment {
-
+    private EditText mProfileNameText;
+    private ProgressBar progressBar;
     public CreateAccountOne() {
         // Required empty public constructor
     }
@@ -41,10 +45,27 @@ public class CreateAccountOne extends Fragment {
         // Inflate the layout for this fragment
         View mView = inflater.inflate(R.layout.fragment_create_account_one, container, false);
 
+        progressBar = mView.findViewById(R.id.progress);
+
         ImageView mBackPressed = mView.findViewById(R.id.createAccountOneBackButton);
         mBackPressed.setOnClickListener(v -> {
             Intent intent = new Intent(mView.getContext(), MainActivity.class);
             startActivity(intent);
+        });
+
+        mProfileNameText = mView.findViewById(R.id.textInputLayoutQuick);
+        Button btnProfileName = mView.findViewById(R.id.buttonProceedName);
+        btnProfileName.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            String mProfileName = mProfileNameText.getText().toString();
+
+            if (mProfileName.isEmpty()) {
+                progressBar.setVisibility(View.GONE);
+                mProfileNameText.setError("Dear Customer, Profile Name cannot be empty");
+            } else {
+                // validate according to policy standard
+                // save name to db in case user does not finish setup
+            }
         });
 
         return mView;

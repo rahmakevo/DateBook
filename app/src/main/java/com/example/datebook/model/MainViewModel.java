@@ -11,4 +11,10 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<Boolean> isConnected = new MutableLiveData<>();
     public MutableLiveData<Boolean> getIsConnected() { return isConnected; }
     public void setIsConnected(Boolean isConnected) { this.isConnected.postValue(isConnected); }
+
+    // check registration flow start status
+    private MutableLiveData<Boolean> isFirstTimeUser = new MutableLiveData<>();
+    public MutableLiveData<Boolean> getIsFirstTimeUser() { return isFirstTimeUser; }
+    public void setIsFirstTimeUser(Boolean isFirstTimeUser) { this.isFirstTimeUser.postValue(isFirstTimeUser); }
+
 }

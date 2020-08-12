@@ -13,4 +13,8 @@
     <string name="phone_not_valid_error">Dear Customer, Phone Number is not valid</string>
     <string name="credential_auth_error">Dear Customer, There has been an Error. Kindly try again!</string>
     <string name="request_permission_error">Dear Customer, Kindly grant the required permissions to proceed</string>
+    <string name="profile_name">Profile Name</string>
+    <string name="profile_status">This is your Profile Name and shall be Public!</string>
+    <string name="status">Hi there, I\'m using DateBook</string>
+    <string name="value_true">true</string>
 </resources>
