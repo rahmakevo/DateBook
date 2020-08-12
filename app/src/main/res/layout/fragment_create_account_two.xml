@@ -105,6 +105,19 @@
             android:textColor="@color/colorWhite"
             android:id="@+id/buttonProceedGender"/>
 
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="100dp"
+            android:layout_marginLeft="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/SpinKitView.Large.Circle"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/colorPrimary" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

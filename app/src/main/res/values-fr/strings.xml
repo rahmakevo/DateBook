@@ -12,4 +12,7 @@
     <string name="request_permission_error">Cher client, veuillez accorder les autorisations nécessaires pour continuer</string>
     <string name="profile_name">Nom de profil</string>
     <string name="profile_status">Ceci est votre nom de profil et doit être public!</string>
+    <string name="status">Salut, j\'utilise DateBook</string>
+    <string name="value_true">vraie</string>
+    <string name="select_gender">Sélectionnez le sexe</string>
 </resources>

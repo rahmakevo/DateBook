@@ -21,4 +21,14 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<String> publicName = new MutableLiveData<>();
     public MutableLiveData<String> getPublicName() { return publicName; }
     public void setPublicName(String publicName) { this.publicName.postValue(publicName); }
+
+    // pass gender
+    private MutableLiveData<String> selectedGender = new MutableLiveData<>();
+    public MutableLiveData<String> getSelectedGender() { return selectedGender; }
+    public void setSelectedGender(String selectedGender) { this.selectedGender.postValue(selectedGender); }
+
+    // pass dob
+    private MutableLiveData<String> dobSelected = new MutableLiveData<>();
+    public MutableLiveData<String> getDobSelected() { return dobSelected; }
+    public void setDobSelected(String dobSelected) { this.dobSelected.postValue(dobSelected); }
 }

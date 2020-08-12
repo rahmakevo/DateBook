@@ -18,4 +18,6 @@
     <string name="status">Hi there, I\'m using DateBook</string>
     <string name="value_true">true</string>
     <string name="select_gender">Select Gender</string>
+    <string name="not_gender_selected">Dear Customer, Kindly select one image for your Gender</string>
+    <string name="select_dob">Select Date Of Birth</string>
 </resources>

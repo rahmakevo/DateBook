@@ -12,30 +12,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.datebook.R;
 import com.example.datebook.model.MainViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateAccountTwo extends Fragment {
+public class CreateAccountThree extends Fragment {
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mBirthDb;
+    private DatabaseReference mBirthRef;
 
-    private CircleImageView maleAvatar;
-    private CircleImageView malePickAvatar;
-
-    private CircleImageView femaleAvatar;
-    private CircleImageView femalePickAvatar;
-
-    private Boolean isMaleSelected = false;
-    private  Boolean isFemaleSelected = false;
-
-    private ProgressBar progressBar;
     protected MainViewModel mainViewModel;
 
-    public CreateAccountTwo() {
+    public CreateAccountThree() {
         // Required empty public constructor
     }
 
@@ -50,7 +45,7 @@ public class CreateAccountTwo extends Fragment {
             public void handleOnBackPressed() {
                 // Handle the back button event
                 FragmentManager mManager = getActivity().getSupportFragmentManager();
-                CreateAccountOne mFragment = new CreateAccountOne();
+                CreateAccountThree mFragment = new CreateAccountThree();
                 mManager.beginTransaction()
                         .replace(R.id.auth_fragment_container, mFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -64,50 +59,31 @@ public class CreateAccountTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View mView = inflater.inflate(R.layout.fragment_create_account_two, container, false);
+        View mView = inflater.inflate(R.layout.fragment_create_account_three, container, false);
 
-        maleAvatar = mView.findViewById(R.id.avatar_image_male);
-        malePickAvatar = mView.findViewById(R.id.icon_pick_male);
+        mAuth = FirebaseAuth.getInstance();
+        mBirthDb = FirebaseDatabase.getInstance();
+        mBirthRef = mBirthDb.getReference();
 
-        femaleAvatar = mView.findViewById(R.id.avatar_image_female);
-        femalePickAvatar = mView.findViewById(R.id.icon_pick_female);
+        DatePicker mDatePicker = mView.findViewById(R.id.datePicker);
+        Button btnDatePicker = mView.findViewById(R.id.buttonProceedDob);
+        btnDatePicker.setOnClickListener(view -> {
+            int mDay = mDatePicker.getDayOfMonth();
+            int mMonth = mDatePicker.getMonth();
+            int mYear = mDatePicker.getYear();
 
-        maleAvatar.setOnClickListener(v -> {
-            isMaleSelected = true;
-            isFemaleSelected = false;
-            malePickAvatar.setVisibility(View.VISIBLE);
-            femalePickAvatar.setVisibility(View.GONE);
-        });
+            if (isAgeValid(mYear)) {
+                String mDob = mDay + "/" + mMonth + "/" + mYear;
 
-        femaleAvatar.setOnClickListener(v -> {
-            isFemaleSelected = true;
-            isMaleSelected = false;
-            femalePickAvatar.setVisibility(View.VISIBLE);
-            malePickAvatar.setVisibility(View.GONE);
-        });
-
-        progressBar = mView.findViewById(R.id.progress);
-        Button btnProceed = mView.findViewById(R.id.buttonProceedGender);
-        btnProceed.setOnClickListener(view -> {
-
-            if (!isMaleSelected && !isFemaleSelected) {
-                Toast.makeText(getActivity(), R.string.not_gender_selected, Toast.LENGTH_SHORT).show();
-            } else {
-
-                if (isMaleSelected) {
-                    mainViewModel.setSelectedGender("male");
-                } else if (isFemaleSelected) {
-                    mainViewModel.setSelectedGender("female");
-                }
-
+                mainViewModel.setDobSelected(mDob);
             }
 
         });
 
-        ImageView mImageBack = mView.findViewById(R.id.createAccountTwoBackButton);
+        ImageView mImageBack = mView.findViewById(R.id.createAccountThreeBackButton);
         mImageBack.setOnClickListener(view -> {
             FragmentManager mManager = getActivity().getSupportFragmentManager();
-            CreateAccountOne mFragment = new CreateAccountOne();
+            CreateAccountThree mFragment = new CreateAccountThree();
             mManager.beginTransaction()
                     .replace(R.id.auth_fragment_container, mFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -115,5 +91,11 @@ public class CreateAccountTwo extends Fragment {
         });
 
         return mView;
+    }
+
+    private boolean isAgeValid(int mYear) {
+        // check for age above 13 years
+        // above age
+        return mYear <= 2007;
     }
 }
