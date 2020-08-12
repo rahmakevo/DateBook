@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1062548009723",
+    "firebase_url": "https://datebook-faa3a.firebaseio.com",
+    "project_id": "datebook-faa3a",
+    "storage_bucket": "datebook-faa3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062548009723:android:b4140e3763c96f9e5bb65e",
+        "android_client_info": {
+          "package_name": "com.example.datebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062548009723-m5j94lad6n864fq1g8j793184ivd2pg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.datebook",
+            "certificate_hash": "b948926664a83b42402da800152b4f9b28fbdb35"
+          }
+        },
+        {
+          "client_id": "1062548009723-nve6kst6qi5tnrn5k1pdvjg2lqr3ekjj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKfbLno6hdqOx1Ccxfklyzcu2BHo-Wx0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062548009723-nve6kst6qi5tnrn5k1pdvjg2lqr3ekjj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

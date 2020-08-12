@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.CreateAccountOne">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:id="@+id/linearLayoutCreateOne">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progress="25"
+                android:id="@+id/progressBarName"
+                android:progressBackgroundTintMode="src_in"
+                android:progressTint="@color/colorDominant"
+                android:progressBackgroundTint="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCreateOne"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/app_name"
+            android:id="@+id/createAccountOneBackButton"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createAccountOneBackButton"
+            android:id="@+id/textViewName"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/colorBlack"
+            android:text="Profile Name"
+            android:textSize="24sp"/>
+
+        <EditText
+            android:id="@+id/textInputLayoutQuick"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:hint="Profile Name"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center_horizontal"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/colorHighlight"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutQuick"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_horizontal"
+            android:textSize="17sp"
+            android:text="This is your Profile Name and shall be Public!"/>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutQuick"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutQuick"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/button_shape_resource"
+            android:text="proceed"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/buttonProceedName"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</FrameLayout>
