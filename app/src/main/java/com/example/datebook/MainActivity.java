@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (number.isEmpty()) {
                 progressBar.setVisibility(View.GONE);
-                mEditTextNumber.setError("Dear Customer, Phone NUmber cannot be empty");
+                mEditTextNumber.setError(getString(R.string.phone_empty_error));
             } else {
                 PhoneNumberUtil numberUtil = PhoneNumberUtil.getInstance();
                 try {
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         initiateSendVerificationCode(finalNumber);
                     } else {
                         progressBar.setVisibility(View.GONE);
-                        mEditTextNumber.setError("Dear Customer, Phone Number is not valid");
+                        mEditTextNumber.setError(getString(R.string.phone_not_valid_error));
                     }
 
                 } catch (Exception e) {
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         // check for user if has account
                     } else {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(this, "Dear Customer, There has been an Error. Kindly try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CODE_ASK_PERMISSIONS:
                 for (int index = permissions.length - 1; index >= 0; --index) {
                     if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, "Dear Customer, Kindly grant the required permissions to proceed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.request_permission_error, Toast.LENGTH_SHORT).show();
                         finish();
                         return;
                     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="join_free">Rejoindre gratuitement</string>
+    <string name="join_message">Rejoignez la communauté DateBook gratuitement en quelques étapes simples et courez la chance de gagner de l\'argent en ligne.</string>
+    <string name="verify_phone_number">Vérifier le numéro de téléphone</string>
+    <string name="phone_number">Numéro de téléphone</string>
+    <string name="policy_text">DateBook souhaiterait vérifier l\'existence de votre compte en utilisant votre numéro de téléphone. Vous pouvez également créer un compte en entrant le numéro de téléphone et en cliquant sur continuer.</string>
+    <string name="proceed">Procéder</string>
+    <string name="phone_empty_error">Cher client, le numéro de téléphone ne peut pas être vide</string>
+    <string name="phone_not_valid_error">Cher client, le numéro de téléphone n\'est pas valide</string>
+    <string name="credential_auth_error">Cher client, Une erreur s\'est produite. Veuillez réessayer!</string>
+    <string name="request_permission_error">Cher client, veuillez accorder les autorisations nécessaires pour continuer</string>
+</resources>

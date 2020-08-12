@@ -2,11 +2,15 @@
     <string name="app_name" translatable="false">DateBook</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="join_free">Join Free</string>
     <string name="join_message">Join the DateBook community for free with just a few simple steps And Stand a chance to make money online.</string>
     <string name="verify_phone_number">Verify Phone Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="policy_text">DateBook would wish to verify the existence your account using your phone number. You can also create an account by entering phone number and click proceed.</string>
     <string name="proceed">Proceed</string>
+    <string name="phone_empty_error">Dear Customer, Phone Number cannot be empty</string>
+    <string name="phone_not_valid_error">Dear Customer, Phone Number is not valid</string>
+    <string name="credential_auth_error">Dear Customer, There has been an Error. Kindly try again!</string>
+    <string name="request_permission_error">Dear Customer, Kindly grant the required permissions to proceed</string>
 </resources>
