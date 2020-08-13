@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.example.datebook.auth.RegistrationFlowActivity;
 import com.example.datebook.fragments.CreateAccountOne;
+import com.example.datebook.fragments.CreateAccountThree;
+import com.example.datebook.fragments.CreateAccountTwo;
 import com.example.datebook.model.MainViewModel;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ChasingDots;
@@ -164,7 +166,9 @@ public class MainActivity extends AppCompatActivity {
                                                         .addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                String publicName = dataSnapshot.getValue().toString();
+                                                                String publicName = dataSnapshot.child("publicName").getValue().toString();
+                                                                String gender = dataSnapshot.child("gender").getValue().toString();
+                                                                String dob = dataSnapshot.child("dob").getValue().toString();
 
                                                                 // if public name is empty redirect to create account one fragment
                                                                 if (publicName.isEmpty()) {
@@ -172,9 +176,20 @@ public class MainActivity extends AppCompatActivity {
                                                                     Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
                                                                     startActivity(mIntent);
                                                                     Bungee.slideLeft(MainActivity.this);
+                                                                } else if(gender.isEmpty()) {
+                                                                    // check for gender
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                    Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
+                                                                    mIntent.putExtra("isGenderNull", "true");
+                                                                    startActivity(mIntent);
+                                                                    Bungee.slideLeft(MainActivity.this);
+                                                                } else if (dob.isEmpty()) {
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                    Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
+                                                                    mIntent.putExtra("isDobNull", "true");
+                                                                    startActivity(mIntent);
+                                                                    Bungee.slideLeft(MainActivity.this);
                                                                 }
-
-                                                                // check for gender
 
                                                             }
 

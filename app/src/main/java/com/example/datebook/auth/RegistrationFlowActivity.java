@@ -32,6 +32,7 @@ public class RegistrationFlowActivity extends AppCompatActivity {
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mProfileDb;
     protected DatabaseReference mProfileRef;
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,27 @@ public class RegistrationFlowActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mProfileDb = FirebaseDatabase.getInstance();
         mProfileRef = mProfileDb.getReference();
+
+        String genderNull = mIntent.getStringExtra("isGenderNull");
+        String dobNull = mIntent.getStringExtra("isDobNull");
+
+        if (genderNull.equals("true")) {
+            CreateAccountTwo mFragment = new CreateAccountTwo();
+            FragmentManager mManager = getSupportFragmentManager();
+            mManager.beginTransaction()
+                    .replace(R.id.auth_fragment_container, mFragment)
+                    .addToBackStack(CreateAccountTwo.class.getSimpleName())
+                    .commit();
+        }
+
+        if (dobNull.equals("true")) {
+            CreateAccountThree mFragment = new CreateAccountThree();
+            FragmentManager mManager = getSupportFragmentManager();
+            mManager.beginTransaction()
+                    .replace(R.id.auth_fragment_container, mFragment)
+                    .addToBackStack(CreateAccountThree.class.getSimpleName())
+                    .commit();
+        }
 
         mainViewModel.getIsFirstTimeUser().observe(this, mFirstTimeUser -> {
             if (mFirstTimeUser) {
