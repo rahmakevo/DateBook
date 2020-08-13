@@ -274,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         checkSelfPermissions();
         checkConnectivity();
+        checkUserAccountStatus();
     }
 
     @Override
@@ -281,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         checkSelfPermissions();
         checkConnectivity();
+        checkUserAccountStatus();
     }
 
     @Override
@@ -288,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         checkSelfPermissions();
         checkConnectivity();
+        checkUserAccountStatus();
     }
 
     private void checkSelfPermissions() {
@@ -331,5 +334,33 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo mInfo = manager.getActiveNetworkInfo();
         Boolean isConnected = mInfo != null && mInfo.isAvailable() && mInfo.isConnected();
         mainViewModel.setIsConnected(isConnected);
+    }
+
+    private void checkUserAccountStatus() {
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        if (mUser.getUid() != null) {
+            mUserAuthRef.child("users").child("profile").child("account").child(mUser.getUid())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                String isFirstUser = dataSnapshot.child("isFirstUser").getValue().toString();
+
+                                if (isFirstUser.equals("true")) {
+                                    // check status of name
+                                } else {
+                                    Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
+                                    startActivity(mIntent);
+                                    Bungee.slideLeft(MainActivity.this);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
     }
 }

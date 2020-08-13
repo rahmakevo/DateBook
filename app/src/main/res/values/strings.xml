@@ -20,4 +20,9 @@
     <string name="select_gender">Select Gender</string>
     <string name="not_gender_selected">Dear Customer, Kindly select one image for your Gender</string>
     <string name="select_dob">Select Date Of Birth</string>
+
+    <string-array name="language_array">
+        <item>English</item>
+        <item>French</item>
+    </string-array>
 </resources>
