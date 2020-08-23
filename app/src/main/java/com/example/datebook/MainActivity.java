@@ -1,54 +1,45 @@
 package com.example.datebook;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.datebook.auth.RegistrationFlowActivity;
-import com.example.datebook.fragments.CreateAccountOne;
-import com.example.datebook.fragments.CreateAccountThree;
-import com.example.datebook.fragments.CreateAccountTwo;
+import com.example.datebook.auth.CreateAccountOne;
+import com.example.datebook.auth.CreateAccountTwo;
+import com.example.datebook.auth.CreateAccountThree;
 import com.example.datebook.model.MainViewModel;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.ChasingDots;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.hbb20.CountryCodePicker;
 
 import java.util.ArrayList;
@@ -56,7 +47,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import spencerstudios.com.bungeelib.Bungee;
 
@@ -76,10 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
     // firebase
     private FirebaseAuth mAuth;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback;
-    private String finalNumber = "";
     private FirebaseDatabase mUserAuthDb;
     private DatabaseReference mUserAuthRef;
+    private static final int RC_SIGN_IN = 9001;
+
+    // for test purpose only
+    private String testNumber = "+254714251069";
+    private String testVerificationCode = "123456";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,65 +81,51 @@ public class MainActivity extends AppCompatActivity {
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, googleSignInOptions);
+
         mAuth = FirebaseAuth.getInstance();
         mUserAuthDb = FirebaseDatabase.getInstance();
         mUserAuthRef = mUserAuthDb.getReference();
 
         mStartLayout = findViewById(R.id.layout_start);
-        mEditTextNumber = findViewById(R.id.editText_carrierNumber);
+
         progressBar = findViewById(R.id.progress);
 
-        cpp = findViewById(R.id.ccp);
-        cpp.registerCarrierNumberEditText(mEditTextNumber);
+        SignInButton btnSignIn = findViewById(R.id.sign_in_button);
+        btnSignIn.setSize(SignInButton.SIZE_STANDARD);
 
-        Button btnLogin = findViewById(R.id.buttonLogin);
-        btnLogin.setOnClickListener(v -> {
-            Sprite chasingDots = new ChasingDots();
-            progressBar.setVisibility(View.VISIBLE);
-
-            String number = mEditTextNumber.getText().toString();
-
-            if (number.isEmpty()) {
-                progressBar.setVisibility(View.GONE);
-                mEditTextNumber.setError(getString(R.string.phone_empty_error));
-            } else {
-                PhoneNumberUtil numberUtil = PhoneNumberUtil.getInstance();
-                try {
-                    Phonenumber.PhoneNumber number1 = numberUtil.parse(cpp.getFullNumber(), cpp.getSelectedCountryNameCode());
-                    boolean isValid = numberUtil.isValidNumber(number1);
-
-                    if (isValid) {
-                        finalNumber = cpp.getFullNumberWithPlus();
-                        initiateSendVerificationCode(finalNumber);
-                    } else {
-                        progressBar.setVisibility(View.GONE);
-                        mEditTextNumber.setError(getString(R.string.phone_not_valid_error));
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    progressBar.setVisibility(View.GONE);
-                    mEditTextNumber.setError(e.getMessage());
-                }
-            }
+        btnSignIn.setOnClickListener(view -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         });
-
-        mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                signInWithPhoneAuthCredential(phoneAuthCredential);
-            }
-
-            @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-
-            }
-        };
 
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
-        mAuth.signInWithCredential(phoneAuthCredential)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (Exception e) {
+                Toast.makeText(this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        progressBar.setVisibility(View.VISIBLE);
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // check for user if has account
@@ -173,22 +152,29 @@ public class MainActivity extends AppCompatActivity {
                                                                 // if public name is empty redirect to create account one fragment
                                                                 if (publicName.isEmpty()) {
                                                                     progressBar.setVisibility(View.GONE);
-                                                                    Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
+                                                                    Intent mIntent = new Intent(MainActivity.this, CreateAccountOne.class);
                                                                     startActivity(mIntent);
                                                                     Bungee.slideLeft(MainActivity.this);
-                                                                } else if(gender.isEmpty()) {
-                                                                    // check for gender
-                                                                    progressBar.setVisibility(View.GONE);
-                                                                    Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
-                                                                    mIntent.putExtra("isGenderNull", "true");
-                                                                    startActivity(mIntent);
-                                                                    Bungee.slideLeft(MainActivity.this);
-                                                                } else if (dob.isEmpty()) {
-                                                                    progressBar.setVisibility(View.GONE);
-                                                                    Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
-                                                                    mIntent.putExtra("isDobNull", "true");
-                                                                    startActivity(mIntent);
-                                                                    Bungee.slideLeft(MainActivity.this);
+                                                                } else {
+                                                                    if (gender.isEmpty()) {
+                                                                        // check for gender
+                                                                        progressBar.setVisibility(View.GONE);
+                                                                        Intent mIntent = new Intent(MainActivity.this, CreateAccountTwo.class);
+                                                                        startActivity(mIntent);
+                                                                        Bungee.slideLeft(MainActivity.this);
+                                                                    } else {
+                                                                        if (dob.isEmpty()) {
+                                                                            progressBar.setVisibility(View.GONE);
+                                                                            Intent mIntent = new Intent(MainActivity.this, CreateAccountThree.class);
+                                                                            startActivity(mIntent);
+                                                                            Bungee.slideLeft(MainActivity.this);
+                                                                        } else {
+                                                                            progressBar.setVisibility(View.GONE);
+                                                                            Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
+                                                                            startActivity(mIntent);
+                                                                            Bungee.slideLeft(MainActivity.this);
+                                                                        }
+                                                                    }
                                                                 }
 
                                                             }
@@ -206,44 +192,44 @@ public class MainActivity extends AppCompatActivity {
                                             // create Map for profile
                                             Date objDate = new Date();
                                             HashMap<String, String> mUserMap = new HashMap<>();
-                                            mUserMap.put("phone", finalNumber);
+                                            mUserMap.put("phone", mUser.getPhoneNumber());
                                             mUserMap.put("isFirstUser", getString(R.string.value_true));
                                             mUserMap.put("createProfileDate", String.valueOf(objDate));
 
                                             mUserAuthRef.child("users").child("profile").child("account").child(mUser.getUid())
                                                     .setValue(mUserMap).addOnCompleteListener(MainActivity.this, task -> {
 
-                                                        if (task.isSuccessful()) {
-                                                            // open Map for user profile
-                                                            HashMap<String, String> mProfileMap = new HashMap<>();
-                                                            mProfileMap.put("publicName", "");
-                                                            mProfileMap.put("gender", "");
-                                                            mProfileMap.put("dob", "");
-                                                            mProfileMap.put("status", getString(R.string.status));
-                                                            mProfileMap.put("publicThumbnail", "");
-                                                            mProfileMap.put("firstName", "");
-                                                            mProfileMap.put("lastName", "");
+                                                if (task.isSuccessful()) {
+                                                    // open Map for user profile
+                                                    HashMap<String, String> mProfileMap = new HashMap<>();
+                                                    mProfileMap.put("publicName", "");
+                                                    mProfileMap.put("gender", "");
+                                                    mProfileMap.put("dob", "");
+                                                    mProfileMap.put("status", getString(R.string.status));
+                                                    mProfileMap.put("publicThumbnail", mUser.getPhotoUrl().toString());
+                                                    mProfileMap.put("firstName", mUser.getDisplayName());
+                                                    mProfileMap.put("lastName", "");
 
-                                                            mUserAuthRef.child("users").child("profile").child(mUser.getUid())
-                                                                    .setValue(mProfileMap).addOnCompleteListener(MainActivity.this, profileTask -> {
+                                                    mUserAuthRef.child("users").child("profile").child(mUser.getUid())
+                                                            .setValue(mProfileMap).addOnCompleteListener(MainActivity.this, profileTask -> {
 
-                                                                        if (profileTask.isSuccessful()) {
-                                                                            // user is ready for user registration process
-                                                                            progressBar.setVisibility(View.GONE);
-                                                                            Intent mIntent = new Intent(MainActivity.this, RegistrationFlowActivity.class);
-                                                                            startActivity(mIntent);
-                                                                            Bungee.slideLeft(MainActivity.this);
-                                                                        } else {
-                                                                            progressBar.setVisibility(View.GONE);
-                                                                            Toast.makeText(MainActivity.this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                            });
+                                                        if (profileTask.isSuccessful()) {
+                                                            // user is ready for user registration process
+                                                            progressBar.setVisibility(View.GONE);
+                                                            Intent mIntent = new Intent(MainActivity.this, CreateAccountOne.class);
+                                                            startActivity(mIntent);
+                                                            Bungee.slideLeft(MainActivity.this);
                                                         } else {
                                                             progressBar.setVisibility(View.GONE);
                                                             Toast.makeText(MainActivity.this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
                                                         }
-
                                                     });
+                                                } else {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Toast.makeText(MainActivity.this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
+                                                }
+
+                                            });
                                         }
                                     }
                                     @Override
@@ -252,21 +238,11 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
                     } else {
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(this, R.string.credential_auth_error, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void initiateSendVerificationCode(String finalNumber) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                finalNumber,
-                60,
-                TimeUnit.SECONDS,
-                this,
-                mCallback);
     }
 
     @Override
@@ -338,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUserAccountStatus() {
         FirebaseUser mUser = mAuth.getCurrentUser();
-        if (mUser.getUid() != null) {
+        if (mUser != null) {
             mUserAuthRef.child("users").child("profile").child("account").child(mUser.getUid())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
