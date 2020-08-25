@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
@@ -20,12 +20,21 @@
         <Spinner
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
             android:layout_marginTop="2.5dp"
             android:id="@+id/spinner_language_home"/>
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="2.5dp"
+            android:layout_marginRight="2.5dp"
+            android:layout_marginTop="7.5dp"
+            android:src="@drawable/ic_settings_black_24dp"
+            android:id="@+id/imageViewMore"/>
+
+    </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
@@ -34,6 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/colorPrimary"
+        app:tabTextColor="@color/colorWhite"
         android:id="@+id/tabLayoutHome"/>
 
     <androidx.viewpager.widget.ViewPager

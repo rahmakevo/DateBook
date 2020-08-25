@@ -60,7 +60,7 @@ public class CreateAccountThree extends AppCompatActivity {
                 mBirthRef.child("users").child("profile").child(mUser.getUid()).child("dob")
                         .setValue(mDob).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Intent mIntent = new Intent(this, HomeActivity.class);
+                                Intent mIntent = new Intent(this, CreateAccountFour.class);
                                 startActivity(mIntent);
                                 Bungee.slideLeft(this);
                             } else {

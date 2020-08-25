@@ -16,10 +16,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.datebook.auth.CreateAccountFour;
 import com.example.datebook.auth.CreateAccountOne;
 import com.example.datebook.auth.CreateAccountTwo;
 import com.example.datebook.auth.CreateAccountThree;
@@ -103,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
+        Spinner spinner = findViewById(R.id.spinnerMain);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
+                this,
+                R.array.language_array,
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spinner.setAdapter(adapter2);
+
     }
 
     @Override
@@ -148,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 String publicName = dataSnapshot.child("publicName").getValue().toString();
                                                                 String gender = dataSnapshot.child("gender").getValue().toString();
                                                                 String dob = dataSnapshot.child("dob").getValue().toString();
+                                                                String gallery = dataSnapshot.child("gallery").getValue().toString();
 
                                                                 // if public name is empty redirect to create account one fragment
                                                                 if (publicName.isEmpty()) {
@@ -169,10 +181,18 @@ public class MainActivity extends AppCompatActivity {
                                                                             startActivity(mIntent);
                                                                             Bungee.slideLeft(MainActivity.this);
                                                                         } else {
-                                                                            progressBar.setVisibility(View.GONE);
-                                                                            Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
-                                                                            startActivity(mIntent);
-                                                                            Bungee.slideLeft(MainActivity.this);
+                                                                            if (gallery.isEmpty()) {
+                                                                                progressBar.setVisibility(View.GONE);
+                                                                                Intent mIntent = new Intent(MainActivity.this, CreateAccountFour.class);
+                                                                                startActivity(mIntent);
+                                                                                Bungee.slideLeft(MainActivity.this);
+                                                                            }
+                                                                            else {
+                                                                                progressBar.setVisibility(View.GONE);
+                                                                                Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
+                                                                                startActivity(mIntent);
+                                                                                Bungee.slideLeft(MainActivity.this);
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -186,6 +206,10 @@ public class MainActivity extends AppCompatActivity {
                                                             }
                                                         });
 
+                                            } else {
+                                                Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
+                                                startActivity(mIntent);
+                                                Bungee.slideLeft(MainActivity.this);
                                             }
 
                                         } else {
@@ -203,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                                                     // open Map for user profile
                                                     HashMap<String, String> mProfileMap = new HashMap<>();
                                                     mProfileMap.put("publicName", "");
+                                                    mProfileMap.put("gallery", "");
                                                     mProfileMap.put("gender", "");
                                                     mProfileMap.put("dob", "");
                                                     mProfileMap.put("status", getString(R.string.status));
@@ -250,7 +275,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         checkSelfPermissions();
         checkConnectivity();
-        checkUserAccountStatus();
     }
 
     @Override
@@ -258,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         checkSelfPermissions();
         checkConnectivity();
-        checkUserAccountStatus();
     }
 
     @Override
@@ -266,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         checkSelfPermissions();
         checkConnectivity();
-        checkUserAccountStatus();
     }
 
     private void checkSelfPermissions() {
@@ -312,31 +334,5 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.setIsConnected(isConnected);
     }
 
-    private void checkUserAccountStatus() {
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        if (mUser != null) {
-            mUserAuthRef.child("users").child("profile").child("account").child(mUser.getUid())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                String isFirstUser = dataSnapshot.child("isFirstUser").getValue().toString();
 
-                                if (isFirstUser.equals("true")) {
-                                    // check status of name
-                                } else {
-                                    Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
-                                    startActivity(mIntent);
-                                    Bungee.slideLeft(MainActivity.this);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-        }
-    }
 }

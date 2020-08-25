@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".auth.CreateAccountFour">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:id="@+id/linearLayoutCreateFour">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progress="100"
+                android:id="@+id/progressBarDob"
+                android:progressBackgroundTintMode="src_in"
+                android:progressTint="@color/colorDominant"
+                android:progressBackgroundTint="@color/colorPrimary"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCreateFour"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/app_name"
+            android:id="@+id/createAccountFourBackButton"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createAccountFourBackButton"
+            android:id="@+id/textViewPhotos"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/colorBlack"
+            android:text="Create Your Gallery"
+            android:textSize="24sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:id="@+id/linearLayoutGallery"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPhotos"
+            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:id="@+id/linearLayoutOne"
+                app:layout_constraintTop_toBottomOf="@+id/textPhotosDesc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="25dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5.5dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:elevation="7dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardBackgroundColor="@color/colorGrey"
+                    android:layout_marginBottom="2.5dp"
+                    app:cardCornerRadius="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:id="@+id/imageViewProfileOne"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_add_black_24dp"
+                            app:civ_circle_background_color="@color/colorGrey"
+                            app:civ_border_color="@color/colorBlack"
+                            app:civ_border_width="1dp"
+                            android:layout_centerInParent="true"
+                            android:padding="5dp"
+                            android:id="@+id/ImageViewPhotosOne"/>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="2.5dp"
+                        android:elevation="7dp"
+                        app:cardBackgroundColor="@color/colorGrey"
+                        app:cardCornerRadius="10dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/imageViewProfileTwo"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/ImageViewPhotosTwo"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_centerInParent="true"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_add_black_24dp"
+                                app:civ_border_color="@color/colorBlack"
+                                app:civ_border_width="1dp"
+                                app:civ_circle_background_color="@color/colorGrey" />
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="1.25dp"
+                        android:layout_weight="1"
+                        android:elevation="7dp"
+
+                        android:layout_marginBottom="1.25dp"
+                        app:cardBackgroundColor="@color/colorGrey"
+                        app:cardCornerRadius="10dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/imageViewProfileThree"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/ImageViewPhotosThree"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_centerInParent="true"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_add_black_24dp"
+                                app:civ_border_color="@color/colorBlack"
+                                app:civ_border_width="1dp"
+                                app:civ_circle_background_color="@color/colorGrey" />
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/linearLayoutTwo"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:weightSum="3">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:elevation="7dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardBackgroundColor="@color/colorGrey"
+                    app:cardCornerRadius="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageViewProfileFour"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ImageViewPhotosFour"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerInParent="true"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_add_black_24dp"
+                            app:civ_border_color="@color/colorBlack"
+                            app:civ_border_width="1dp"
+                            app:civ_circle_background_color="@color/colorGrey" />
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:elevation="7dp"
+                    android:layout_marginStart="2.5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="2.5dp"
+                    app:cardBackgroundColor="@color/colorGrey"
+                    app:cardCornerRadius="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageViewProfileFive"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ImageViewPhotoFive"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerInParent="true"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_add_black_24dp"
+                            app:civ_border_color="@color/colorBlack"
+                            app:civ_border_width="1dp"
+                            app:civ_circle_background_color="@color/colorGrey" />
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:elevation="7dp"
+                    app:cardBackgroundColor="@color/colorGrey"
+                    app:cardCornerRadius="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageViewProfileSix"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ImageViewPhotosSix"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerInParent="true"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_add_black_24dp"
+                            app:civ_border_color="@color/colorBlack"
+                            app:civ_border_width="1dp"
+                            app:civ_circle_background_color="@color/colorGrey" />
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGallery"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_shape_resource"
+            android:text="@string/proceed"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/buttonProceedPhotos"/>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progressCreateAccountFour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/colorPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

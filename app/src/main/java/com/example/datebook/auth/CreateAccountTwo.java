@@ -16,6 +16,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import spencerstudios.com.bungeelib.Bungee;
 
@@ -80,9 +83,21 @@ public class CreateAccountTwo extends AppCompatActivity {
                     mProfileRef.child("users").child("profile").child(mUser.getUid()).child("gender")
                             .setValue("male").addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Intent mIntent = new Intent(this, CreateAccountThree.class);
-                                    startActivity(mIntent);
-                                    Bungee.slideLeft(this);
+                                    Date objDate = new Date();
+
+                                    HashMap<String, String> mGenderMap = new HashMap<>();
+                                    mGenderMap.put("date", objDate.toString());
+                                    mGenderMap.put("gender", "male");
+                                    mProfileRef.child("users").child("matches").child("male").child(mUser.getUid())
+                                            .setValue(mGenderMap).addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            Intent mIntent = new Intent(this, CreateAccountThree.class);
+                                            startActivity(mIntent);
+                                            Bungee.slideLeft(this);
+                                        } else {
+                                            Toast.makeText(this, R.string.not_gender_selected, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 } else {
                                     Toast.makeText(this, R.string.not_gender_selected, Toast.LENGTH_SHORT).show();
                                 }
@@ -93,9 +108,21 @@ public class CreateAccountTwo extends AppCompatActivity {
                     mProfileRef.child("users").child("profile").child(mUser.getUid()).child("gender")
                             .setValue("female").addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Intent mIntent = new Intent(this, CreateAccountThree.class);
-                            startActivity(mIntent);
-                            Bungee.slideLeft(this);
+                            Date objDate = new Date();
+
+                            HashMap<String, String> mGenderMap = new HashMap<>();
+                            mGenderMap.put("date", objDate.toString());
+                            mGenderMap.put("gender", "female");
+                            mProfileRef.child("users").child("matches").child("female").child(mUser.getUid())
+                                    .setValue(mGenderMap).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    Intent mIntent = new Intent(this, CreateAccountThree.class);
+                                    startActivity(mIntent);
+                                    Bungee.slideLeft(this);
+                                } else {
+                                    Toast.makeText(this, R.string.not_gender_selected, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } else {
                             Toast.makeText(this, R.string.not_gender_selected, Toast.LENGTH_SHORT).show();
                         }
