@@ -59,8 +59,25 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
         MatchModel matchModel = model.get(position);
         holder.mTextUserName.setText(matchModel.public_name);
 
-        Picasso.get().load(matchModel.thumb_profile).into(holder.mImageAvatar);
-        Picasso.get().load(matchModel.thumb_profile).into(holder.mImageMatchMain);
+        mChatInitiateRef.child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Picasso.get()
+                                .load(snapshot.child("publicThumbnail").getValue().toString())
+                                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                                .into(holder.mImageAvatar);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+        Picasso.get().load(matchModel.thumb_profile)
+                .into(holder.mImageMatchMain);
 
         holder.mImageChat.setOnClickListener(v -> {
 

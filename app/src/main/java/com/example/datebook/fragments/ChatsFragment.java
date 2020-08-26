@@ -67,25 +67,26 @@ public class ChatsFragment extends Fragment {
         recyclerView.addItemDecoration(itemDecoration);
 
         modelList = new ArrayList<>();
-        mChatRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                            InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
-                            modelList.add(model);
-                        }
+        mChatRef = mChatRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat");
+        mChatRef.keepSynced(true);
+        mChatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                    modelList.add(model);
+                }
 
-                        progressBar.setVisibility(View.GONE);
-                        adapter = new ChatRecyclerViewAdapter(modelList);
-                        recyclerView.setAdapter(adapter);
-                    }
+                progressBar.setVisibility(View.GONE);
+                adapter = new ChatRecyclerViewAdapter(modelList);
+                recyclerView.setAdapter(adapter);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        });
 
         return mView;
     }

@@ -56,8 +56,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         holder.mChatPublicName.setText(snapshot.child("publicName").getValue().toString());
 
-//                        Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
-//                                .into(holder.mImageChatAvatar);
+                        Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
+                                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                                .into(holder.mImageChatAvatar);
                     }
 
                     @Override
