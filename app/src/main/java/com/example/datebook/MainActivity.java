@@ -275,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         checkSelfPermissions();
         checkConnectivity();
+        checkIfUserExist();
     }
 
     @Override
@@ -282,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         checkSelfPermissions();
         checkConnectivity();
+        checkIfUserExist();
     }
 
     @Override
@@ -289,6 +291,16 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         checkSelfPermissions();
         checkConnectivity();
+        checkIfUserExist();
+    }
+
+    private void checkIfUserExist() {
+        FirebaseAuth mUserAuth = FirebaseAuth.getInstance();
+        if (mUserAuth.getCurrentUser() != null) {
+            Intent mIntent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(mIntent);
+            Bungee.slideLeft(this);
+        }
     }
 
     private void checkSelfPermissions() {

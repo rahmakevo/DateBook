@@ -3,15 +3,16 @@ package com.example.datebook;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.datebook.adapter.ViewPagerFragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
+
+import spencerstudios.com.bungeelib.Bungee;
 
 public class HomeActivity extends AppCompatActivity {
     protected ViewPagerFragmentAdapter adapter;
@@ -56,7 +57,15 @@ public class HomeActivity extends AppCompatActivity {
 
         ImageView mImageMore = findViewById(R.id.imageViewMore);
         mImageMore.setOnClickListener(view -> {
-            Toast.makeText(this, "pressed", Toast.LENGTH_SHORT).show();
+            Intent mIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+            startActivity(mIntent);
+            Bungee.slideLeft(this);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
     }
 }

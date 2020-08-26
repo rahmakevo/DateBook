@@ -59,7 +59,7 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
         MatchModel matchModel = model.get(position);
         holder.mTextUserName.setText(matchModel.public_name);
 
-        mChatInitiateRef.child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+        mChatInitiateRef.child("users").child("profile").child(matchModel.user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
