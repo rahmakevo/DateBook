@@ -10,15 +10,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
-import com.example.datebook.model.ChatModel;
+import com.example.datebook.model.InitiateChatModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
-    private List<ChatModel> model;
+    private List<InitiateChatModel> model;
     private Context context;
+
+    private FirebaseDatabase mChatDb;
+    private DatabaseReference mChatRef;
+
+    public ChatRecyclerViewAdapter(List<InitiateChatModel> model) { this.model = model; }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,16 +39,32 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 parent,
                 false
         );
+        mChatDb = FirebaseDatabase.getInstance();
+        mChatRef = mChatDb.getReference();
         context = mView.getContext();
         return new ViewHolder(mView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChatModel chatModel = model.get(position);
+        InitiateChatModel initiateChatModel = model.get(position);
 
-        holder.mChatPublicName.setText(chatModel.public_name);
-        holder.mCurrentSentMessage.setText("Hey there, I'm using gaga");
+        // get recipient details
+        mChatRef.child("users").child("profile").child(initiateChatModel.recipient_id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        holder.mChatPublicName.setText(snapshot.child("publicName").getValue().toString());
+
+//                        Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
+//                                .into(holder.mImageChatAvatar);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
     }
 

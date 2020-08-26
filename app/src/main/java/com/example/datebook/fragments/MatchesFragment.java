@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.datebook.R;
 import com.example.datebook.adapter.MatchRecyclerViewAdapter;
@@ -32,6 +33,7 @@ public class MatchesFragment extends Fragment {
 
     private FirebaseDatabase mMatchDb;
     private DatabaseReference mMatchRef;
+    private ProgressBar progressBar;
 
     public MatchesFragment() {
         // Required empty public constructor
@@ -47,6 +49,9 @@ public class MatchesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View mView = inflater.inflate(R.layout.fragment_matches, container, false);
+
+        progressBar = mView.findViewById(R.id.progressMatches);
+        progressBar.setVisibility(View.VISIBLE);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         RecyclerView mMatchList = mView.findViewById(R.id.match_list);
@@ -79,6 +84,7 @@ public class MatchesFragment extends Fragment {
                                         modelList.add(model);
                                     }
 
+                                    progressBar.setVisibility(View.GONE);
                                     adapter = new MatchRecyclerViewAdapter(modelList);
                                     mMatchList.setAdapter(adapter);
                                 }
@@ -103,6 +109,7 @@ public class MatchesFragment extends Fragment {
                                         modelList.add(model);
                                     }
 
+                                    progressBar.setVisibility(View.GONE);
                                     adapter = new MatchRecyclerViewAdapter(modelList);
                                     mMatchList.setAdapter(adapter);
                                 }

@@ -334,5 +334,4 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.setIsConnected(isConnected);
     }
 
-
 }

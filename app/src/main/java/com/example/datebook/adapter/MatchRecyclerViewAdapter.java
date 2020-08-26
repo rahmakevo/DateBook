@@ -6,14 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
 import com.example.datebook.model.MatchModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -23,6 +32,10 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
     private Context context;
     private Boolean liked = false;
     private int mCount = 0;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mChatInitiateRef;
+    private FirebaseDatabase mChatInitiateDb;
 
     public MatchRecyclerViewAdapter(List<MatchModel> model) { this.model = model; }
 
@@ -34,6 +47,9 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
                 parent,
                 false
         );
+        mAuth = FirebaseAuth.getInstance();
+        mChatInitiateDb = FirebaseDatabase.getInstance();
+        mChatInitiateRef = mChatInitiateDb.getReference();
         context = mView.getContext();
         return new ViewHolder(mView);
     }
@@ -45,6 +61,43 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
 
         Picasso.get().load(matchModel.thumb_profile).into(holder.mImageAvatar);
         Picasso.get().load(matchModel.thumb_profile).into(holder.mImageMatchMain);
+
+        holder.mImageChat.setOnClickListener(v -> {
+
+            mChatInitiateRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                    .child("initiateChat").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // check if child exist
+                    if (!snapshot.hasChild(matchModel.user_id)) {
+                        // create initiate chat Map
+                        Date objDate = new Date();
+                        HashMap<String, String> mChatInitiateMap = new HashMap<>();
+                        mChatInitiateMap.put("recipient_id", matchModel.user_id);
+                        mChatInitiateMap.put("sender_id", mAuth.getCurrentUser().getUid());
+                        mChatInitiateMap.put("date", String.valueOf(objDate));
+
+                        mChatInitiateRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                                .child("initiateChat").child(matchModel.user_id).setValue(mChatInitiateMap)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        // open page
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        });
 
     }
 

@@ -3,6 +3,7 @@ package com.example.datebook.auth;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -13,8 +14,11 @@ import android.widget.Toast;
 import com.example.datebook.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +33,7 @@ public class CreateAccountTwo extends AppCompatActivity {
 
     private CircleImageView femaleAvatar;
     private CircleImageView femalePickAvatar;
+    private String mPublicName;
 
     private Boolean isMaleSelected = false;
     private  Boolean isFemaleSelected = false;
@@ -71,6 +76,22 @@ public class CreateAccountTwo extends AppCompatActivity {
             malePickAvatar.setVisibility(View.GONE);
         });
 
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        mProfileRef.child("users").child("profile").child(mUser.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            mPublicName = snapshot.child("publicName").getValue().toString();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         Button btnProceed = findViewById(R.id.buttonProceedGender);
         btnProceed.setOnClickListener(view -> {
 
@@ -79,7 +100,7 @@ public class CreateAccountTwo extends AppCompatActivity {
             } else {
 
                 if (isMaleSelected) {
-                    FirebaseUser mUser = mAuth.getCurrentUser();
+
                     mProfileRef.child("users").child("profile").child(mUser.getUid()).child("gender")
                             .setValue("male").addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
@@ -87,7 +108,9 @@ public class CreateAccountTwo extends AppCompatActivity {
 
                                     HashMap<String, String> mGenderMap = new HashMap<>();
                                     mGenderMap.put("date", objDate.toString());
-                                    mGenderMap.put("gender", "male");
+                                    mGenderMap.put("public_name", mPublicName);
+                                    mGenderMap.put("thumb_profile", String.valueOf(mUser.getPhotoUrl()));
+                                    mGenderMap.put("user_id", mUser.getUid());
                                     mProfileRef.child("users").child("matches").child("male").child(mUser.getUid())
                                             .setValue(mGenderMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
@@ -104,7 +127,6 @@ public class CreateAccountTwo extends AppCompatActivity {
                             });
 
                 } else if (isFemaleSelected) {
-                    FirebaseUser mUser = mAuth.getCurrentUser();
                     mProfileRef.child("users").child("profile").child(mUser.getUid()).child("gender")
                             .setValue("female").addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -112,7 +134,9 @@ public class CreateAccountTwo extends AppCompatActivity {
 
                             HashMap<String, String> mGenderMap = new HashMap<>();
                             mGenderMap.put("date", objDate.toString());
-                            mGenderMap.put("gender", "female");
+                            mGenderMap.put("public_name", mPublicName);
+                            mGenderMap.put("thumb_profile", String.valueOf(mUser.getPhotoUrl()));
+                            mGenderMap.put("user_id", mUser.getUid());
                             mProfileRef.child("users").child("matches").child("female").child(mUser.getUid())
                                     .setValue(mGenderMap).addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
