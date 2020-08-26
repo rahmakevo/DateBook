@@ -1,36 +1,77 @@
 package com.example.datebook;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.datebook.adapter.SettingsListRecyclerView;
+import com.example.datebook.model.SettingsModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import spencerstudios.com.bungeelib.Bungee;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private ListView mListSettings;
-    private String mSettingsName[] = {
-            "Help",
-            "Profile",
-            "Account",
-            "Chats",
-            "Notifications"
-    };
-    private int mSettingsIcon[] = {
-            R.drawable.ic_help_black_24dp,
-            R.drawable.ic_account_circle_black_24dp,
-            R.drawable.ic_vpn_key_black_24dp,
-            R.drawable.ic_chat_black_24dp,
-            R.drawable.ic_notifications_black_24dp
-    };
+    private List<SettingsModel> modelList = new ArrayList<>();
+    private SettingsListRecyclerView adapter;
+
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mUserDb;
+    private DatabaseReference mUserRef;
+    private ProgressBar mProgressSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUserDb = FirebaseDatabase.getInstance();
+        mUserRef = mUserDb.getReference();
+
+        mProgressSettings = findViewById(R.id.progressSettings);
+        mProgressSettings.setVisibility(View.VISIBLE);
+
+        CircleImageView mSettingsProfile = findViewById(R.id.imageViewSettingsProfile);
+        TextView mSettingsProfileName = findViewById(R.id.textSettingsName);
+        TextView mSettingsProfileStatus = findViewById(R.id.textSettingsStatus);
+
+        mUserRef.child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        mSettingsProfileName.setText(snapshot.child("publicName").getValue().toString());
+                        mSettingsProfileStatus.setText(snapshot.child("status").getValue().toString());
+                        Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
+                                .into(mSettingsProfile);
+                        mProgressSettings.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
         ImageView imageBack = findViewById(R.id.imageBackSettings);
         imageBack.setOnClickListener(view -> {
@@ -39,6 +80,42 @@ public class SettingsActivity extends AppCompatActivity {
             Bungee.slideRight(this);
         });
 
-        mListSettings = findViewById(R.id.list_settings);
+        RecyclerView mListSettings = findViewById(R.id.list_settings);
+        adapter = new SettingsListRecyclerView(modelList);
+        mListSettings.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+        mListSettings.addItemDecoration(itemDecor);
+
+        mListSettings.setAdapter(adapter);
+        prepareSettingsData();
+
+    }
+
+    private void prepareSettingsData() {
+        SettingsModel model = new SettingsModel("Help", R.drawable.ic_help_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Profile", R.drawable.ic_account_circle_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Account", R.drawable.ic_vpn_key_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Chats", R.drawable.ic_chat_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Notifications", R.drawable.ic_notifications_black_24dp);
+        modelList.add(model);
+
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mIntent = new Intent(this, HomeActivity.class);
+        startActivity(mIntent);
+        Bungee.slideRight(this);
     }
 }
