@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
 import com.example.datebook.model.MatchModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -90,6 +92,7 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
                         // create initiate chat Map
                         Date objDate = new Date();
                         HashMap<String, String> mChatInitiateMap = new HashMap<>();
+
                         mChatInitiateMap.put("recipient_id", matchModel.user_id);
                         mChatInitiateMap.put("sender_id", mAuth.getCurrentUser().getUid());
                         mChatInitiateMap.put("date", String.valueOf(objDate));
@@ -105,6 +108,40 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
                                 });
                     } else {
                         // open page
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        });
+
+        holder.mImageVideoCall.setOnClickListener(view -> {
+
+            mChatInitiateRef.child("users").child("calls").child(mAuth.getCurrentUser().getUid())
+                    .child("initiateCall").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!snapshot.hasChild(matchModel.user_id)) {
+
+                        Date objDate = new Date();
+                        HashMap<String, String> mVideoInitiateMap = new HashMap<>();
+                        mVideoInitiateMap.put("recipient_id", matchModel.user_id);
+                        mVideoInitiateMap.put("caller_id", mAuth.getCurrentUser().getUid());
+                        mVideoInitiateMap.put("date", String.valueOf(objDate));
+
+                        mChatInitiateRef.child("users").child("calls").child(mAuth.getCurrentUser().getUid())
+                                .child("initiateCall").child(matchModel.user_id).setValue(mVideoInitiateMap)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 }
 
