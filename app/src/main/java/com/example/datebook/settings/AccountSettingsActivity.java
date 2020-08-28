@@ -46,7 +46,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     private void prepareData() {
-        SettingsModel model = new SettingsModel("Delete my account", R.drawable.ic_delete_black_24dp);
+        SettingsModel model = new SettingsModel("Privacy", R.drawable.ic_lock_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Delete my account", R.drawable.ic_delete_black_24dp);
         modelList.add(model);
 
         adapter.notifyDataSetChanged();

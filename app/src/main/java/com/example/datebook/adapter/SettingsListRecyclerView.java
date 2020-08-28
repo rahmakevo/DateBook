@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.datebook.R;
 import com.example.datebook.settings.AccountSettingsActivity;
 import com.example.datebook.settings.ChatsSettingsActivity;
+import com.example.datebook.settings.NotificationsSettingsActivity;
 import com.example.datebook.settings.PreferencesMatchesActivity;
 import com.example.datebook.model.SettingsModel;
+import com.example.datebook.settings.PrivacySettingsActivity;
 
 import java.util.List;
 
@@ -68,6 +70,15 @@ public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListR
                     context.startActivity(mIntentAccount);
                     Bungee.slideLeft(context);
                     break;
+                case "Notifications":
+                    Intent mIntentNotify = new Intent(context.getApplicationContext(), NotificationsSettingsActivity.class);
+                    context.startActivity(mIntentNotify);
+                    Bungee.slideLeft(context);
+                    break;
+                case "Privacy":
+                    Intent mIntentPrivacy = new Intent(context.getApplicationContext(), PrivacySettingsActivity.class);
+                    context.startActivity(mIntentPrivacy);
+                    Bungee.slideLeft(context);
             }
         });
     }

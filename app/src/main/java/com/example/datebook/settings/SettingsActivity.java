@@ -113,6 +113,9 @@ public class SettingsActivity extends AppCompatActivity {
         model = new SettingsModel("Match Preferences", R.drawable.ic_favorite_black_24dp);
         modelList.add(model);
 
+        model = new SettingsModel("Invite a friend", R.drawable.ic_people_black_24dp);
+        modelList.add(model);
+
         adapter.notifyDataSetChanged();
     }
 

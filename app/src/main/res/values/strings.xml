@@ -25,4 +25,11 @@
         <item>English</item>
         <item>French</item>
     </string-array>
+
+    <string-array name="last_seen">
+        <item>Everyone</item>
+        <item>My Matches</item>
+        <item>Nobody</item>
+    </string-array>
+
 </resources>
