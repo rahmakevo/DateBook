@@ -9,8 +9,10 @@
         android:defaultValue="false"
         android:summary="Disabling Discovery prevents potential matches from viewing your profile as Public. This has no effect on existing matches"/>
 
-    <PreferenceCategory
-        android:title="Match Me With :">
+    <PreferenceCategory>
+
+        <Preference
+            android:summary="Match Me With :"/>
 
         <CheckBoxPreference
             android:key="male"

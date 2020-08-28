@@ -79,6 +79,12 @@ public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListR
                     Intent mIntentPrivacy = new Intent(context.getApplicationContext(), PrivacySettingsActivity.class);
                     context.startActivity(mIntentPrivacy);
                     Bungee.slideLeft(context);
+                    break;
+                case "Invite a friend":
+                    Intent mShareIntent = new Intent(Intent.ACTION_SEND);
+                    mShareIntent.setType("text/plain");
+                    context.startActivity(mShareIntent);
+                    break;
             }
         });
     }

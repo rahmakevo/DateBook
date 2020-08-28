@@ -80,6 +80,7 @@ public class CallsFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
                 adapter = new CallsRecyclerAdapter(modelList);
                 recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
