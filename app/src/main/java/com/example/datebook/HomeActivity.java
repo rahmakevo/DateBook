@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.datebook.adapter.ViewPagerFragmentAdapter;
+import com.example.datebook.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 
 import spencerstudios.com.bungeelib.Bungee;

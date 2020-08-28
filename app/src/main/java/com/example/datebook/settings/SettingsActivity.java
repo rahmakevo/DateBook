@@ -1,4 +1,4 @@
-package com.example.datebook;
+package com.example.datebook.settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.datebook.HomeActivity;
+import com.example.datebook.R;
 import com.example.datebook.adapter.SettingsListRecyclerView;
 import com.example.datebook.model.SettingsModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         RecyclerView mListSettings = findViewById(R.id.list_settings);
-        adapter = new SettingsListRecyclerView(modelList);
+        adapter = new SettingsListRecyclerView(modelList, getSupportFragmentManager());
         mListSettings.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         DividerItemDecoration itemDecor = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
@@ -106,6 +108,9 @@ public class SettingsActivity extends AppCompatActivity {
         modelList.add(model);
 
         model = new SettingsModel("Notifications", R.drawable.ic_notifications_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Match Preferences", R.drawable.ic_favorite_black_24dp);
         modelList.add(model);
 
         adapter.notifyDataSetChanged();

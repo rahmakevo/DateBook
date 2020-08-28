@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        android:key="discovery"
+        android:title="Discovery"
+        android:defaultValue="false"
+        android:summary="Disabling Discovery prevents potential matches from viewing your profile as Public. This has no effect on existing matches"/>
+
+    <PreferenceCategory
+        android:title="Match Me With :">
+
+        <CheckBoxPreference
+            android:key="male"
+            android:title="Male"
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="female"
+            android:title="Female"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <SeekBarPreference
+            android:key="show_ages"
+            android:title="Show Ages"
+            app:min="18"
+            app:showSeekBarValue="true"
+            android:defaultValue="21"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

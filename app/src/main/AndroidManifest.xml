@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_datebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".settings.ChatsSettingsActivity"></activity>
+        <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".auth.CreateAccountFour" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".MainActivity">
@@ -32,6 +33,7 @@
         <activity android:name=".auth.CreateAccountOne" />
         <activity android:name=".auth.CreateAccountTwo" />
         <activity android:name=".auth.CreateAccountThree" />
+        <activity android:name=".settings.PreferencesMatchesActivity" />
     </application>
 
 </manifest>

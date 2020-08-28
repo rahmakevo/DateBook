@@ -1,26 +1,35 @@
 package com.example.datebook.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
+import com.example.datebook.settings.ChatsSettingsActivity;
+import com.example.datebook.settings.PreferencesMatchesActivity;
 import com.example.datebook.model.SettingsModel;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import spencerstudios.com.bungeelib.Bungee;
 
 public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListRecyclerView.ViewHolder> {
     private List<SettingsModel> modelList;
     private Context context;
+    public FragmentManager manager;
 
-    public SettingsListRecyclerView(List<SettingsModel> modelList) { this.modelList = modelList; }
+    public SettingsListRecyclerView(List<SettingsModel> modelList, FragmentManager manager) {
+        this.modelList = modelList;
+        this.manager = manager;
+    }
 
     @NonNull
     @Override
@@ -40,6 +49,21 @@ public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListR
 
         holder.mTextSettingsName.setText(model.name);
         holder.mImageSettingsIcon.setImageResource(model.icon);
+
+        holder.itemView.setOnClickListener(view -> {
+            switch (model.name) {
+                case "Match Preferences":
+                    Intent mIntent = new Intent(context.getApplicationContext(), PreferencesMatchesActivity.class);
+                    context.startActivity(mIntent);
+                    Bungee.slideLeft(context);
+                    break;
+                case "Chats":
+                    Intent mIntentChats = new Intent(context.getApplicationContext(), ChatsSettingsActivity.class);
+                    context.startActivity(mIntentChats);
+                    Bungee.slideLeft(context);
+                    break;
+            }
+        });
     }
 
     @Override
