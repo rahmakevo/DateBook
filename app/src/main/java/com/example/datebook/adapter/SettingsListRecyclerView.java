@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
+import com.example.datebook.settings.AccountSettingsActivity;
 import com.example.datebook.settings.ChatsSettingsActivity;
 import com.example.datebook.settings.PreferencesMatchesActivity;
 import com.example.datebook.model.SettingsModel;
@@ -60,6 +61,11 @@ public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListR
                 case "Chats":
                     Intent mIntentChats = new Intent(context.getApplicationContext(), ChatsSettingsActivity.class);
                     context.startActivity(mIntentChats);
+                    Bungee.slideLeft(context);
+                    break;
+                case "Account":
+                    Intent mIntentAccount =  new Intent(context.getApplicationContext(), AccountSettingsActivity.class);
+                    context.startActivity(mIntentAccount);
                     Bungee.slideLeft(context);
                     break;
             }
