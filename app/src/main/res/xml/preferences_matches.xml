@@ -16,12 +16,14 @@
 
         <CheckBoxPreference
             android:key="male"
+            android:icon="@drawable/male"
             android:title="Male"
             android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="female"
             android:title="Female"
+            android:icon="@drawable/female"
             android:defaultValue="false"/>
 
     </PreferenceCategory>

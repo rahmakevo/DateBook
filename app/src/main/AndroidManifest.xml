@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_datebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".settings.PrivacySettingsActivity"></activity>
+        <activity android:name=".settings.ProfileSettingsActivity"></activity>
+        <activity android:name=".settings.PrivacySettingsActivity" />
         <activity android:name=".settings.NotificationsSettingsActivity" />
         <activity android:name=".settings.AccountSettingsActivity" />
         <activity android:name=".settings.ChatsSettingsActivity" />

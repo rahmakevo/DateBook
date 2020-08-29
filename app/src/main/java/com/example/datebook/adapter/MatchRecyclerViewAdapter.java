@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
 import com.example.datebook.model.MatchModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,8 +57,8 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MatchModel matchModel = model.get(position);
+        holder.mTextStatus.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris euismod dolor a ante maximus ultricies. Phasellus vel ante a nulla posuere vestibulum ac eu odio. Integer blandit at leo eu efficitur. Pellentesque vel aliquet urna. Sed consectetur ac quam at porta. Duis volutpat, mauris finibus iaculis mollis, quam odio fermentum ex, in venenatis diam ipsum at urna.");
         holder.mTextUserName.setText(matchModel.public_name);
-
         mChatInitiateRef.child("users").child("profile").child(matchModel.user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -170,6 +168,7 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
         private ImageView mImageChat;
         private ImageView mImageShareProfile;
         private TextView mTextUserName;
+        private TextView mTextStatus;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -182,6 +181,7 @@ public class MatchRecyclerViewAdapter extends RecyclerView.Adapter<MatchRecycler
             mImageChat = itemView.findViewById(R.id.imageViewMessage);
             mImageShareProfile = itemView.findViewById(R.id.imageViewShare);
             mTextUserName = itemView.findViewById(R.id.textViewUserName);
+            mTextStatus = itemView.findViewById(R.id.textStatus);
         }
     }
 }

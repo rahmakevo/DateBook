@@ -18,6 +18,7 @@ import com.example.datebook.settings.NotificationsSettingsActivity;
 import com.example.datebook.settings.PreferencesMatchesActivity;
 import com.example.datebook.model.SettingsModel;
 import com.example.datebook.settings.PrivacySettingsActivity;
+import com.example.datebook.settings.ProfileSettingsActivity;
 
 import java.util.List;
 
@@ -84,6 +85,11 @@ public class SettingsListRecyclerView extends RecyclerView.Adapter<SettingsListR
                     Intent mShareIntent = new Intent(Intent.ACTION_SEND);
                     mShareIntent.setType("text/plain");
                     context.startActivity(mShareIntent);
+                    break;
+                case "Profile":
+                    Intent mIntentProfile = new Intent(context.getApplicationContext(), ProfileSettingsActivity.class);
+                    context.startActivity(mIntentProfile);
+                    Bungee.slideLeft(context);
                     break;
             }
         });
