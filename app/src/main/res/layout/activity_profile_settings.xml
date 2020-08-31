@@ -63,14 +63,15 @@
         android:id="@+id/textViewProfileNameSettings"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/textViewProfileNameSettings"
-        app:layout_constraintStart_toStartOf="@+id/textViewProfileNameSettings"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/profile_status"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus porta ultrices lacus in sodales. Duis vehicula turpis vel eros aliquam"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:id="@+id/textViewProfileStatusSettings"/>
