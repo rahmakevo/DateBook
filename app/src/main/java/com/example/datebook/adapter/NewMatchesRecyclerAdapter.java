@@ -48,6 +48,7 @@ public class NewMatchesRecyclerAdapter extends RecyclerView.Adapter<NewMatchesRe
 
         holder.itemView.setOnClickListener(view -> {
             Intent mIntent = new Intent(context.getApplicationContext(), MatchProfileActivity.class);
+            mIntent.putExtra("user_id", model.user_id);
             context.startActivity(mIntent);
             Bungee.slideLeft(context);
         });
