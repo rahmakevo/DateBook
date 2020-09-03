@@ -1,4 +1,4 @@
-package com.example.datebook.settings;
+package com.example.datebook;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,21 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.example.datebook.R;
-
 import spencerstudios.com.bungeelib.Bungee;
 
-public class ProfileSettingsActivity extends AppCompatActivity {
+public class MatchProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_settings);
+        setContentView(R.layout.activity_match_profile);
 
-        ImageView mImageBack = findViewById(R.id.imageBackSettingsProfilePref);
+        ImageView mImageBack = findViewById(R.id.imageBackMatchProfile);
         mImageBack.setOnClickListener(view -> {
-            Intent mIntentBack = new Intent(this, SettingsActivity.class);
-            startActivity(mIntentBack);
+            Intent mBackIntent = new Intent(this, HomeActivity.class);
+            startActivity(mBackIntent);
             Bungee.slideRight(this);
         });
     }
@@ -28,8 +26,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent mIntentBack = new Intent(this, SettingsActivity.class);
-        startActivity(mIntentBack);
+        Intent mBackIntent = new Intent(this, HomeActivity.class);
+        startActivity(mBackIntent);
         Bungee.slideRight(this);
     }
 }

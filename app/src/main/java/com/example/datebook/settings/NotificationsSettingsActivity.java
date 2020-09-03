@@ -38,4 +38,12 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.preferences_notifications, rootKey);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mIntent = new Intent(this, SettingsActivity.class);
+        startActivity(mIntent);
+        Bungee.slideRight(this);
+    }
 }

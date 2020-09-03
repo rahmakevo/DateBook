@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_datebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".MatchProfileActivity"></activity>
         <activity android:name=".settings.ProfileSettingsActivity" />
         <activity android:name=".settings.PrivacySettingsActivity" />
         <activity android:name=".settings.NotificationsSettingsActivity" />

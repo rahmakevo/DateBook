@@ -40,4 +40,11 @@ public class PreferencesMatchesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mIntent = new Intent(this, SettingsActivity.class);
+        startActivity(mIntent);
+        Bungee.slideRight(this);
+    }
 }

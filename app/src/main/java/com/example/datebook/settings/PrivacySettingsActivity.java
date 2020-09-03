@@ -38,4 +38,12 @@ public class PrivacySettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.preferences_privacy, rootKey);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mIntentBack = new Intent(this, AccountSettingsActivity.class);
+        startActivity(mIntentBack);
+        Bungee.slideRight(this);
+    }
 }
