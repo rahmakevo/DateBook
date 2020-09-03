@@ -23,7 +23,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         TabLayout mHomeLayout = findViewById(R.id.tabLayoutHome);
-        mHomeLayout.addTab(mHomeLayout.newTab().setText("Matches"));
         mHomeLayout.addTab(mHomeLayout.newTab().setText("Chats"));
         mHomeLayout.addTab(mHomeLayout.newTab().setText("Calls"));
         ViewPager viewPager2 = findViewById(R.id.viewPagerHome);

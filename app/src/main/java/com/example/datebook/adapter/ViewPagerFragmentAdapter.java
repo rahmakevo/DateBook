@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.datebook.fragments.CallsFragment;
 import com.example.datebook.fragments.ChatsFragment;
-import com.example.datebook.fragments.MatchesFragment;
 
 public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
     public ViewPagerFragmentAdapter(@NonNull FragmentManager fm) { super(fm); }
@@ -17,10 +16,8 @@ public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new MatchesFragment();
-            case 1:
                 return new ChatsFragment();
-            case 2:
+            case 1:
                 return new CallsFragment();
             default:
                 return null;
@@ -29,7 +26,7 @@ public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
 }
