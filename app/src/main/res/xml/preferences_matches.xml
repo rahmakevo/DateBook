@@ -31,10 +31,19 @@
     <PreferenceCategory>
         <SeekBarPreference
             android:key="show_ages"
-            android:title="Show Ages"
+            android:title="Match Preferable Age"
             app:min="18"
             app:showSeekBarValue="true"
             android:defaultValue="21"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <SeekBarPreference
+            android:key="proximity"
+            android:title="Match Proximity in Yards"
+            app:min="0"
+            app:showSeekBarValue="true"
+            android:defaultValue="0"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

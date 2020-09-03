@@ -2,6 +2,7 @@ package com.example.datebook.settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -91,6 +92,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         mListSettings.setAdapter(adapter);
         prepareSettingsData();
+
+        ConstraintLayout mLayoutProfile = findViewById(R.id.layout_profile);
+        mLayoutProfile.setOnClickListener(view -> {
+            Intent mIntent = new Intent(this, ProfileSettingsActivity.class);
+            startActivity(mIntent);
+            Bungee.slideLeft(this);
+        });
 
     }
 
