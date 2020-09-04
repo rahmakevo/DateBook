@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.datebook.adapter.SliderAdapterExample;
+import com.example.datebook.model.ProfileImageModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +22,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import spencerstudios.com.bungeelib.Bungee;
@@ -32,6 +40,9 @@ public class MatchProfileActivity extends AppCompatActivity {
     private DatabaseReference mStorageAccRef;
     private ProgressBar progressBar;
 
+    private List<ProfileImageModel> modelList = new ArrayList<>();
+    private SliderAdapterExample adapterExample;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +51,8 @@ public class MatchProfileActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressProfileMatch);
         progressBar.setVisibility(View.VISIBLE);
         String user_id = getIntent().getStringExtra("user_id");
+        adapterExample = new SliderAdapterExample(MatchProfileActivity.this, modelList);
+        initAdapter();
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDb = FirebaseDatabase.getInstance();
@@ -52,13 +65,39 @@ public class MatchProfileActivity extends AppCompatActivity {
             Bungee.slideRight(this);
         });
 
-        ImageView mImageMain = findViewById(R.id.imageViewMain);
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference()
                 .child("users").child("gallery").child(user_id).child("main.jpg");
-        mStorageRef.getDownloadUrl().addOnSuccessListener(snapShot -> {
-            progressBar.setVisibility(View.GONE);
-            Picasso.get().load(snapShot).into(mImageMain);
+        mStorageRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
+            if (snapShot.isSuccessful()) {
+                progressBar.setVisibility(View.GONE);
+                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
+                modelList.add(model);
+                adapterExample.notifyDataSetChanged();
+            }
         });
+
+        StorageReference mStorageTwoRef = FirebaseStorage.getInstance().getReference()
+                .child("users").child("gallery").child(user_id).child("two.jpg");
+        mStorageTwoRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
+            if (snapShot.isSuccessful()) {
+                progressBar.setVisibility(View.GONE);
+                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
+                modelList.add(model);
+                adapterExample.notifyDataSetChanged();
+            }
+        });
+
+        StorageReference mStorageThreeRef = FirebaseStorage.getInstance().getReference()
+                .child("users").child("gallery").child(user_id).child("three.jpg");
+        mStorageThreeRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
+            if (snapShot.isSuccessful()) {
+                progressBar.setVisibility(View.GONE);
+                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
+                modelList.add(model);
+                adapterExample.notifyDataSetChanged();
+            }
+        });
+
 
         TextView mTextNamePublic = findViewById(R.id.textMatchProfileName);
         TextView mTextStatus = findViewById(R.id.textMatchProfileStatus);
@@ -128,7 +167,6 @@ public class MatchProfileActivity extends AppCompatActivity {
                 }
             });
         });
-
     }
 
     @Override
@@ -137,5 +175,18 @@ public class MatchProfileActivity extends AppCompatActivity {
         Intent mBackIntent = new Intent(this, HomeActivity.class);
         startActivity(mBackIntent);
         Bungee.slideRight(this);
+    }
+
+    private void initAdapter() {
+        SliderView sliderView = findViewById(R.id.imageSlider);
+        sliderView.setSliderAdapter(adapterExample);
+
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        sliderView.setIndicatorSelectedColor(Color.WHITE);
+        sliderView.setIndicatorUnselectedColor(Color.GRAY);
+        sliderView.setScrollTimeInSec(30); //set scroll delay in seconds :
+        sliderView.startAutoCycle();
     }
 }
