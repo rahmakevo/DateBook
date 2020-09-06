@@ -3,6 +3,7 @@ package com.example.datebook.settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.datebook.R;
+import com.example.datebook.fragments.BottomSheetNameFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +49,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private ImageView mImageProfileMain, mImageProfileTwo, mImageProfileThree,
                       mImageProfileFour, ImageProfileFive, mImageProfileSix;
     private CircleImageView mImageThumbnail;
+    private ImageView mImageChangeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +182,18 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         CircleImageView mImageAddSix = findViewById(R.id.ImageViewProfilePhotosAddSix);
         mImageAddSix.setOnClickListener(view -> {
             chooseImage(6);
+        });
+
+        mImageChangeName = findViewById(R.id.imageViewEdiTextName);
+        mImageChangeName.setOnClickListener(view -> {
+            BottomSheetNameFragment fragment = new BottomSheetNameFragment("Change your Public Name");
+            fragment.show(getSupportFragmentManager(), fragment.getTag());
+        });
+
+        ImageView mChangeBio = findViewById(R.id.imageViewEdiTextStatus);
+        mChangeBio.setOnClickListener(view -> {
+            BottomSheetNameFragment fragment = new BottomSheetNameFragment("Change your Bio");
+            fragment.show(getSupportFragmentManager(), fragment.getTag());
         });
 
     }

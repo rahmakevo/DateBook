@@ -131,7 +131,12 @@ public class MatchProfileActivity extends AppCompatActivity {
                         mInitiateChatMap.put("date", String.valueOf(date));
 
                         mStorageAccRef.child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
-                                .child(user_id).setValue(mInitiateChatMap).addOnSuccessListener(snapShot -> {});
+                                .child(user_id).setValue(mInitiateChatMap).addOnSuccessListener(snapShot -> {
+                                    Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
+                                    mIntent.putExtra("recipient_id", user_id);
+                                    startActivity(mIntent);
+                                    Bungee.slideLeft(MatchProfileActivity.this);
+                        });
                     }
                 }
 

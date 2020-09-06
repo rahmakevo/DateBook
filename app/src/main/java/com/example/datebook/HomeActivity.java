@@ -3,27 +3,43 @@ package com.example.datebook;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.datebook.adapter.ViewPagerFragmentAdapter;
 import com.example.datebook.settings.SettingsActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.IOException;
+import java.util.List;
 
 import spencerstudios.com.bungeelib.Bungee;
 
 public class HomeActivity extends AppCompatActivity {
     protected ViewPagerFragmentAdapter adapter;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         TabLayout mHomeLayout = findViewById(R.id.tabLayoutHome);
-        mHomeLayout.addTab(mHomeLayout.newTab().setText("Chats"));
+        mHomeLayout.addTab(mHomeLayout.newTab().setText("Home"));
         mHomeLayout.addTab(mHomeLayout.newTab().setText("Calls"));
         ViewPager viewPager2 = findViewById(R.id.viewPagerHome);
 
@@ -61,6 +77,23 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(mIntent);
             Bungee.slideLeft(this);
         });
+
+        Geocoder geocoder = new Geocoder(this);
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            if(addresses != null && addresses.size() > 0) {
+                                String countryName = addresses.get(0).getCountryName();
+
+                                Log.v("countryName :", countryName);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -68,4 +101,5 @@ public class HomeActivity extends AppCompatActivity {
         super.onBackPressed();
         finishAffinity();
     }
+
 }
