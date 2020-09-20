@@ -1,4 +1,4 @@
-package com.example.datebook;
+package com.example.datebook.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.datebook.R;
 import com.example.datebook.adapter.SliderAdapterExample;
 import com.example.datebook.model.ProfileImageModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -119,7 +119,8 @@ public class MatchProfileActivity extends AppCompatActivity {
 
         CircleImageView mInitiateChat = findViewById(R.id.imageViewInitiateChatWithMatch);
         mInitiateChat.setOnClickListener(view -> {
-            mStorageAccRef.child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
+            mStorageAccRef
+                    .child("users").child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
                     .child(user_id).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -130,13 +131,18 @@ public class MatchProfileActivity extends AppCompatActivity {
                         mInitiateChatMap.put("sender_id", mAuth.getCurrentUser().getUid());
                         mInitiateChatMap.put("date", String.valueOf(date));
 
-                        mStorageAccRef.child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
+                        mStorageAccRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
                                 .child(user_id).setValue(mInitiateChatMap).addOnSuccessListener(snapShot -> {
                                     Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
                                     mIntent.putExtra("recipient_id", user_id);
                                     startActivity(mIntent);
                                     Bungee.slideLeft(MatchProfileActivity.this);
                         });
+                    } else {
+                        Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
+                        mIntent.putExtra("recipient_id", user_id);
+                        startActivity(mIntent);
+                        Bungee.slideLeft(MatchProfileActivity.this);
                     }
                 }
 

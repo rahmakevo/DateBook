@@ -6,86 +6,92 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MessageActivity">
+    tools:context=".ui.MessageActivity">
 
-    <!--    handle bottom navigation-->
-    <androidx.cardview.widget.CardView
+    <!-- handle bottom navigation -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:id="@+id/layoutBottomMessage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_messages">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/imageViewSendMessage"
+            android:src="@drawable/ic_send_black_24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewSendMessage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_camera_alt_black_24dp"
+            android:id="@+id/imageViewSendImage"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewSendImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="visible"
+            android:id="@+id/imageViewSendAudio"
+            android:src="@drawable/ic_mic_black_24dp"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_mood_black_24dp"
+            android:id="@+id/imageViewMood"/>
+
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@+id/imageViewMood"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewSendAudio"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/colorWhite"
+            android:layout_marginBottom="7.5dp"
+            android:layout_marginTop="7.5dp"
+            android:hint="Type a message"
+            android:id="@+id/editTextMessage"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- create view to separate bottom from message list -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyLight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBottomMessage"
         app:layout_constraintTop_toBottomOf="@+id/layout_messages"
-        android:layout_margin="10dp"
-        android:elevation="7dp"
-        app:cardCornerRadius="50dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:id="@+id/imageViewSendMessage"
-                android:src="@drawable/ic_send_black_24dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintEnd_toStartOf="@+id/imageViewSendMessage"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_camera_alt_black_24dp"
-                android:id="@+id/imageViewSendImage"/>
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintEnd_toStartOf="@+id/imageViewSendImage"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:visibility="visible"
-                android:id="@+id/imageViewSendAudio"
-                android:src="@drawable/ic_mic_black_24dp"/>
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_mood_black_24dp"
-                android:id="@+id/imageViewMood"/>
-
-            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                app:layout_constraintStart_toEndOf="@+id/imageViewMood"
-                app:layout_constraintEnd_toStartOf="@+id/imageViewSendAudio"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="10dp"
-                android:hint="Type a message"
-                android:id="@+id/editTextMessage"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        android:id="@+id/view_offset_message"/>
 
     <!--    handle top navigation-->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -156,7 +162,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/layoutBottomMessage"
+        app:layout_constraintBottom_toTopOf="@+id/view_offset_message"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutTabMessage"

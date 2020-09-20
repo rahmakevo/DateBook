@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.datebook.MatchProfileActivity;
+import com.example.datebook.ui.MatchProfileActivity;
 import com.example.datebook.R;
 import com.example.datebook.model.MatchModel;
 import com.squareup.picasso.Picasso;

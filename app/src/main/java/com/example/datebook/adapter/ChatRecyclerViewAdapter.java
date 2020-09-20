@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.datebook.MessageActivity;
+import com.example.datebook.ui.MessageActivity;
 import com.example.datebook.R;
 import com.example.datebook.model.InitiateChatModel;
 import com.google.firebase.database.DataSnapshot;

@@ -1,4 +1,4 @@
-package com.example.datebook;
+package com.example.datebook.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.datebook.R;
 import com.example.datebook.auth.CreateAccountFour;
 import com.example.datebook.auth.CreateAccountOne;
 import com.example.datebook.auth.CreateAccountTwo;

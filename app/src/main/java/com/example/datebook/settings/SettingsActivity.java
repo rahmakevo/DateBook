@@ -11,11 +11,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.datebook.HomeActivity;
+import com.example.datebook.ui.HomeActivity;
 import com.example.datebook.R;
 import com.example.datebook.adapter.SettingsListRecyclerView;
 import com.example.datebook.model.SettingsModel;

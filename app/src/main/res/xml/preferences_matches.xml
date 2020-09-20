@@ -38,12 +38,21 @@
     </PreferenceCategory>
 
     <PreferenceCategory>
-        <SeekBarPreference
-            android:key="proximity"
-            android:title="Match Proximity in Yards"
-            app:min="0"
-            app:showSeekBarValue="true"
-            android:defaultValue="0"/>
+
+        <Preference
+            android:summary="Filter Match By My :"/>
+
+        <CheckBoxPreference
+            android:key="country"
+            android:title="Current country locale"
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="locality"
+            android:title="Current locality locale"
+            android:defaultValue="false"
+            />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
