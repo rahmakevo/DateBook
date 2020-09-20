@@ -22,11 +22,11 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
 
     private List<MessageModel> model;
     private FirebaseUser mUser;
-    private String match_id;
+    private String recipientId;
 
-    public MessageRecyclerViewAdapter(List<MessageModel> model, String match_id) {
+    public MessageRecyclerViewAdapter(List<MessageModel> model, String recipientId) {
         this.model = model;
-        this.match_id = match_id;
+        this.recipientId = recipientId;
     }
 
     @NonNull
@@ -77,7 +77,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
         MessageModel messageModel = model.get(position);
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (messageModel.getFrom().equals(mUser.getUid())) {
+        if (messageModel.from.equals(mUser.getUid())) {
             return message_sender;
         } else {
             return message_receiver;

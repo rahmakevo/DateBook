@@ -69,7 +69,6 @@ public class MatchProfileActivity extends AppCompatActivity {
                 .child("users").child("gallery").child(user_id).child("main.jpg");
         mStorageRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
             if (snapShot.isSuccessful()) {
-                progressBar.setVisibility(View.GONE);
                 ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
                 modelList.add(model);
                 adapterExample.notifyDataSetChanged();
@@ -80,7 +79,6 @@ public class MatchProfileActivity extends AppCompatActivity {
                 .child("users").child("gallery").child(user_id).child("two.jpg");
         mStorageTwoRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
             if (snapShot.isSuccessful()) {
-                progressBar.setVisibility(View.GONE);
                 ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
                 modelList.add(model);
                 adapterExample.notifyDataSetChanged();
@@ -133,10 +131,19 @@ public class MatchProfileActivity extends AppCompatActivity {
 
                         mStorageAccRef.child("users").child("chat").child(mAuth.getCurrentUser().getUid()).child("initiateChat")
                                 .child(user_id).setValue(mInitiateChatMap).addOnSuccessListener(snapShot -> {
-                                    Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
-                                    mIntent.putExtra("recipient_id", user_id);
-                                    startActivity(mIntent);
-                                    Bungee.slideLeft(MatchProfileActivity.this);
+
+                            HashMap<String, String> mInitiateRecipientChatMap = new HashMap<>();
+                            mInitiateRecipientChatMap.put("recipient_id", mAuth.getCurrentUser().getUid());
+                            mInitiateRecipientChatMap.put("sender_id", user_id);
+                            mInitiateRecipientChatMap.put("date", String.valueOf(date));
+
+                            mStorageAccRef.child("users").child("chat").child(user_id).child("initiateChat")
+                                    .child(mAuth.getCurrentUser().getUid()).setValue(mInitiateRecipientChatMap).addOnSuccessListener(taskRecipient -> {
+                                Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
+                                mIntent.putExtra("recipient_id", user_id);
+                                startActivity(mIntent);
+                                Bungee.slideLeft(MatchProfileActivity.this);
+                            });
                         });
                     } else {
                         Intent mIntent = new Intent(MatchProfileActivity.this, MessageActivity.class);
@@ -167,7 +174,17 @@ public class MatchProfileActivity extends AppCompatActivity {
                         mInitiateVideoChatMap.put("recipient_id", user_id);
 
                         mStorageAccRef.child("users").child("calls").child(mAuth.getCurrentUser().getUid())
-                                .child("initiateCall").child(user_id).setValue(mInitiateVideoChatMap).addOnSuccessListener(snapShot -> {});
+                                .child("initiateCall").child(user_id).setValue(mInitiateVideoChatMap).addOnSuccessListener(snapShot -> {
+
+                                    HashMap<String, String> mInitiateRecipientVideoChatMap = new HashMap<>();
+                                    mInitiateRecipientVideoChatMap.put("caller_id", mAuth.getCurrentUser().getUid());
+                                    mInitiateRecipientVideoChatMap.put("date", String.valueOf(date));
+                                    mInitiateRecipientVideoChatMap.put("recipient_id", user_id);
+
+                                    mStorageAccRef.child("users").child("calls").child(user_id).child("initiateCall")
+                                            .child(mAuth.getCurrentUser().getUid()).setValue(mInitiateRecipientVideoChatMap).addOnSuccessListener(taskRecipient -> {});
+
+                        });
 
                     }
                 }

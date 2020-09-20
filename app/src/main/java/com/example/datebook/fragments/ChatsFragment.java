@@ -138,7 +138,7 @@ public class ChatsFragment extends Fragment {
                     });
                 } else if (mGender.equals("female")) {
                     // show male matches
-
+                    matchModel.clear();
                     mMatchRef = mMatchDb.getReference().child("users").child("matches").child("male");
                     mMatchRef.keepSynced(true);
                     mMatchRef.addValueEventListener(new ValueEventListener() {
