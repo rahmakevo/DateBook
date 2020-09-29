@@ -30,6 +30,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,13 +99,22 @@ public class MatchProfileActivity extends AppCompatActivity {
 
         TextView mTextNamePublic = findViewById(R.id.textMatchProfileName);
         TextView mTextStatus = findViewById(R.id.textMatchProfileStatus);
+        TextView mTextAge = findViewById(R.id.textMatchProfileAge);
 
         mStorageAccRef.child("users").child("profile").child(user_id).addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        mTextNamePublic.setText(snapshot.child("publicName").getValue().toString());
+                        mTextNamePublic.setText(snapshot.child("publicName").getValue().toString()+",");
                         mTextStatus.setText(snapshot.child("status").getValue().toString());
+
+                        Calendar today = Calendar.getInstance();
+                        String dob = snapshot.child("dob").getValue().toString();
+                        String dobYear = dob.substring(dob.length() - 4);
+
+
+                        int age = today.get(Calendar.YEAR) - Integer.parseInt(dobYear);
+                        mTextAge.setText(String.valueOf(age));
                     }
 
                     @Override
@@ -194,6 +204,37 @@ public class MatchProfileActivity extends AppCompatActivity {
                 }
             });
         });
+
+        CircleImageView mImageViewFavorite = findViewById(R.id.imageViewLikeMatch);
+        DatabaseReference mFavRef = mFirebaseDb.getReference();
+        mFavRef
+                .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                .child("favorites").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild(user_id)) {
+                    mImageViewFavorite.setImageDrawable(getResources().getDrawable(R.drawable.fav_selected_foreground));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        mImageViewFavorite.setOnClickListener(v -> {
+            DatabaseReference mFavoritesRef = mFirebaseDb.getReference();
+            mFavoritesRef
+                    .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                    .child("favorites").child(user_id).setValue(user_id).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            mImageViewFavorite.setImageDrawable(getResources().getDrawable(R.drawable.fav_selected_foreground));
+                        }
+            });
+
+        });
+
     }
 
     @Override

@@ -34,6 +34,7 @@ public class ChatsFragment extends Fragment {
     private RecyclerView recyclerView, recyclerViewMatches;
     private List<InitiateChatModel> modelList;
     private List<MatchModel> matchModel;
+    private List<String> mFriendsIdList;
     private ChatRecyclerViewAdapter adapter;
     private NewMatchesRecyclerAdapter matchesAdapter;
 
@@ -106,30 +107,54 @@ public class ChatsFragment extends Fragment {
         matchModel = new ArrayList<>();
         mMatchRef = mMatchRef.child("users").child("profile").child(mAuth.getCurrentUser().getUid());
         mMatchRef.keepSynced(true);
+        mMatchRef.orderByValue();
+        mMatchRef.limitToFirst(50);
         mMatchRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String mGender = snapshot.child("gender").getValue().toString();
 
                 if (mGender.equals("male")) {
-                    // show female matches
-
-                    mMatchRef = mMatchDb.getReference().child("users").child("matches").child("female");
-                    mMatchRef.keepSynced(true);
-                    mMatchRef.addValueEventListener(new ValueEventListener() {
+                    FirebaseDatabase mInitiateChatCheckDb = FirebaseDatabase.getInstance();
+                    DatabaseReference mInitiateChatCheckRef = mInitiateChatCheckDb.getReference();
+                    mInitiateChatCheckRef
+                            .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                            .child("initiateChat").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                matchModel.clear();
-                                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                    matchModel.add(model);
+                            mFriendsIdList = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                                mFriendsIdList.add(model.recipient_id);
+                            }
+
+                            System.out.println(mFriendsIdList.toString());
+
+                            // show female matches
+
+                            mMatchRef = mMatchDb.getReference().child("users").child("matches").child("female");
+                            mMatchRef.keepSynced(true);
+                            mMatchRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        matchModel.clear();
+                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
+                                        }
+
+                                        progressBar.setVisibility(View.GONE);
+                                        matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
+                                        recyclerViewMatches.setAdapter(matchesAdapter);
+                                    }
                                 }
 
-                                progressBar.setVisibility(View.GONE);
-                                matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
-                                recyclerViewMatches.setAdapter(matchesAdapter);
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                         @Override
@@ -138,24 +163,46 @@ public class ChatsFragment extends Fragment {
                         }
                     });
                 } else if (mGender.equals("female")) {
-                    // show male matches
-                    matchModel.clear();
-                    mMatchRef = mMatchDb.getReference().child("users").child("matches").child("male");
-                    mMatchRef.keepSynced(true);
-                    mMatchRef.addValueEventListener(new ValueEventListener() {
+                    FirebaseDatabase mInitiateChatCheckDb = FirebaseDatabase.getInstance();
+                    DatabaseReference mInitiateChatCheckRef = mInitiateChatCheckDb.getReference();
+                    mInitiateChatCheckRef
+                            .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                            .child("initiateChat").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                matchModel.clear();
-                                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                    matchModel.add(model);
+                            mFriendsIdList = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                                mFriendsIdList.add(model.recipient_id);
+                            }
+
+                            System.out.println(mFriendsIdList.toString());
+
+                            // show male matches
+                            matchModel.clear();
+                            mMatchRef = mMatchDb.getReference().child("users").child("matches").child("male");
+                            mMatchRef.keepSynced(true);
+                            mMatchRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        matchModel.clear();
+                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
+                                        }
+
+                                        progressBar.setVisibility(View.GONE);
+                                        matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
+                                        recyclerViewMatches.setAdapter(matchesAdapter);
+                                    }
                                 }
 
-                                progressBar.setVisibility(View.GONE);
-                                matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
-                                recyclerViewMatches.setAdapter(matchesAdapter);
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                         @Override
