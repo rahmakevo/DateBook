@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datebook.R;
+import com.example.datebook.model.InitiateCallModel;
 import com.example.datebook.model.InitiateChatModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,13 +25,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdapter.ViewHolder> {
 
-    private List<InitiateChatModel> model;
+    private List<InitiateCallModel> model;
     private Context context;
 
     private FirebaseDatabase mCallsDb;
     private DatabaseReference mCallsRef;
 
-    public CallsRecyclerAdapter(List<InitiateChatModel> model) { this.model = model; }
+    public CallsRecyclerAdapter(List<InitiateCallModel> model) { this.model = model; }
 
     @NonNull
     @Override
@@ -47,8 +48,7 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        InitiateChatModel chatModel = model.get(position);
+        InitiateCallModel chatModel = model.get(position);
         holder.mVideoProfileDate.setText(chatModel.date);
         mCallsRef.child("users").child("profile").child(chatModel.recipient_id)
                 .addValueEventListener(new ValueEventListener() {
@@ -66,6 +66,7 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
 
                     }
                 });
+
 
 
     }

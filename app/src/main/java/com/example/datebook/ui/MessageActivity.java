@@ -21,6 +21,7 @@ import com.example.datebook.R;
 import com.example.datebook.adapter.MessageRecyclerViewAdapter;
 import com.example.datebook.model.MessageModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
@@ -47,17 +49,15 @@ public class MessageActivity extends AppCompatActivity {
     private String recipient_id = null;
     private RecyclerView mMessageList;
     private MessageRecyclerViewAdapter adapter;
-    private static final String MyPREFERENCES = "MyPrefs" ;
+    private List<MessageModel> messageModels;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
         recipient_id = getIntent().getStringExtra("recipient_id");
-        SharedPreferences sharedPref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("recipient_id", recipient_id);
-        editor.apply();
+        readMessages(recipient_id);
 
         mAuth = FirebaseAuth.getInstance();
         mRecipientDb = FirebaseDatabase.getInstance();
@@ -96,7 +96,6 @@ public class MessageActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setStackFromEnd(true);
         mMessageList.setLayoutManager(layoutManager);
-        readMessages();
 
         View rootView = findViewById(R.id.root_view);
         ImageView mEmoji = findViewById(R.id.imageViewMood);
@@ -152,58 +151,43 @@ public class MessageActivity extends AppCompatActivity {
                                         mRecipientRef
                                                 .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
                                                 .child(recipient_id).child("messages").child("thread").child("notifications")
-                                                .push().setValue(mMessageMap).addOnSuccessListener(taskNotify -> {});
+                                                .push().setValue(mMessageMap).addOnSuccessListener(taskNotify -> {
+                                            adapter.notifyDataSetChanged();
+                                        });
                                     });
                         });
             }
         });
     }
 
-    private void readMessages() {
-        SharedPreferences sharedPref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        String recipientId = sharedPref.getString("recipient_id", null);
+    private void readMessages(String recipientId) {
+        messageModels = new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser mUser = mAuth.getCurrentUser();
 
         DatabaseReference mMessagesRef = FirebaseDatabase.getInstance().getReference();
         mMessagesRef
-                .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
-                .child(recipientId).child("messages").child("thread");
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<MessageModel> messageModels = new ArrayList<>();
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    MessageModel model = dataSnapshot.getValue(MessageModel.class);
-                    messageModels.add(model);
-                }
+                .child("users").child("chat").child(Objects.requireNonNull(mUser).getUid())
+                .child(Objects.requireNonNull(recipientId)).child("messages").child("thread")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        messageModels.clear();
+                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                            MessageModel model = dataSnapshot.getValue(MessageModel.class);
+                            if (model.getFrom() != null) {
+                                messageModels.add(model);
+                            }
+                        }
 
-                adapter = new MessageRecyclerViewAdapter(messageModels, recipientId);
-                mMessageList.setAdapter(adapter);
-            }
+                        adapter = new MessageRecyclerViewAdapter(messageModels, recipientId);
+                        mMessageList.setAdapter(adapter);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        };
-        mMessagesRef.addValueEventListener(valueEventListener);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cleanPrefs();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        cleanPrefs();
-    }
-
-    private void cleanPrefs() {
-        SharedPreferences mySPrefs = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mySPrefs.edit();
-        editor.remove("recipient_id");
-        editor.apply();
+                    }
+                });
     }
 }

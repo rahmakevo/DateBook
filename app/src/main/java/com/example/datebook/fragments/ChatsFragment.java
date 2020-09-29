@@ -120,6 +120,7 @@ public class ChatsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
+                                matchModel.clear();
                                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                                     MatchModel model = dataSnapshot.getValue(MatchModel.class);
                                     matchModel.add(model);
@@ -145,6 +146,7 @@ public class ChatsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
+                                matchModel.clear();
                                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                                     MatchModel model = dataSnapshot.getValue(MatchModel.class);
                                     matchModel.add(model);

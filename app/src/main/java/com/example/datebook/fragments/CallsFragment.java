@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.example.datebook.R;
 import com.example.datebook.adapter.CallsRecyclerAdapter;
+import com.example.datebook.model.InitiateCallModel;
 import com.example.datebook.model.InitiateChatModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +31,7 @@ public class CallsFragment extends Fragment {
 
     private ProgressBar mProgressBar;
     private RecyclerView recyclerView;
-    private List<InitiateChatModel> modelList;
+    private List<InitiateCallModel> modelList;
     private CallsRecyclerAdapter adapter;
 
     private FirebaseAuth mAuth;
@@ -73,7 +74,7 @@ public class CallsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                    InitiateCallModel model = dataSnapshot.getValue(InitiateCallModel.class);
                     modelList.add(model);
                 }
 

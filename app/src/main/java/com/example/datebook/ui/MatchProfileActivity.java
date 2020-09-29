@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.example.datebook.R;
 import com.example.datebook.adapter.SliderAdapterExample;
 import com.example.datebook.model.ProfileImageModel;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,33 +70,29 @@ public class MatchProfileActivity extends AppCompatActivity {
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference()
                 .child("users").child("gallery").child(user_id).child("main.jpg");
-        mStorageRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
-            if (snapShot.isSuccessful()) {
-                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
-                modelList.add(model);
-                adapterExample.notifyDataSetChanged();
-            }
+        mStorageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            progressBar.setVisibility(View.GONE);
+            ProfileImageModel model = new ProfileImageModel(uri.toString());
+            modelList.add(model);
+            adapterExample.notifyDataSetChanged();
         });
 
         StorageReference mStorageTwoRef = FirebaseStorage.getInstance().getReference()
                 .child("users").child("gallery").child(user_id).child("two.jpg");
-        mStorageTwoRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
-            if (snapShot.isSuccessful()) {
-                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
-                modelList.add(model);
-                adapterExample.notifyDataSetChanged();
-            }
+        mStorageTwoRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            progressBar.setVisibility(View.GONE);
+            ProfileImageModel model = new ProfileImageModel(uri.toString());
+            modelList.add(model);
+            adapterExample.notifyDataSetChanged();
         });
 
         StorageReference mStorageThreeRef = FirebaseStorage.getInstance().getReference()
                 .child("users").child("gallery").child(user_id).child("three.jpg");
-        mStorageThreeRef.getDownloadUrl().addOnCompleteListener(snapShot -> {
-            if (snapShot.isSuccessful()) {
-                progressBar.setVisibility(View.GONE);
-                ProfileImageModel model = new ProfileImageModel(String.valueOf(snapShot));
-                modelList.add(model);
-                adapterExample.notifyDataSetChanged();
-            }
+        mStorageThreeRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            progressBar.setVisibility(View.GONE);
+            ProfileImageModel model = new ProfileImageModel(uri.toString());
+            modelList.add(model);
+            adapterExample.notifyDataSetChanged();
         });
 
 

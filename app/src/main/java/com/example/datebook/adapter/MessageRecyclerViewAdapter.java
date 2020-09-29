@@ -1,5 +1,6 @@
 package com.example.datebook.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecyclerViewAdapter.MessageViewHolder> {
     public static final int message_sender = 0;
@@ -21,7 +23,6 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
     public static final int no_messages_yet = 2;
 
     private List<MessageModel> model;
-    private FirebaseUser mUser;
     private String recipientId;
 
     public MessageRecyclerViewAdapter(List<MessageModel> model, String recipientId) {
@@ -37,13 +38,11 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
                     .from(parent.getContext())
                     .inflate(R.layout.item_message_received, parent, false);
             return new MessageViewHolder(view);
-        } else if (viewType == message_sender) {
+        } else {
             View view = LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.item_message_sent, parent, false);
             return new MessageViewHolder(view);
-        } else {
-            return null;
         }
 
     }
@@ -75,9 +74,10 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
     @Override
     public int getItemViewType(int position) {
         MessageModel messageModel = model.get(position);
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser mUserId = mAuth.getCurrentUser();
 
-        if (messageModel.from.equals(mUser.getUid())) {
+        if (messageModel.getFrom().equals(Objects.requireNonNull(mUserId).getUid())) {
             return message_sender;
         } else {
             return message_receiver;
