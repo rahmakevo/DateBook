@@ -14,8 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.datebook.HomeActivity;
-import com.example.datebook.MainActivity;
+import com.example.datebook.ui.HomeActivity;
 import com.example.datebook.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

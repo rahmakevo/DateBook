@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_datebook"
@@ -19,10 +22,32 @@
         android:roundIcon="@mipmap/ic_datebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"></activity>
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+             See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_datebook" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <activity android:name=".ui.MessageActivity">
+            <intent-filter>
+                <action android:name="com.example.datebook.TARGETNOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.MatchProfileActivity" />
+        <activity android:name=".settings.ProfileSettingsActivity" />
+        <activity android:name=".settings.PrivacySettingsActivity" />
+        <activity android:name=".settings.NotificationsSettingsActivity" />
+        <activity android:name=".settings.AccountSettingsActivity" />
+        <activity android:name=".settings.ChatsSettingsActivity" />
+        <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".auth.CreateAccountFour" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.HomeActivity" />
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,6 +57,14 @@
         <activity android:name=".auth.CreateAccountOne" />
         <activity android:name=".auth.CreateAccountTwo" />
         <activity android:name=".auth.CreateAccountThree" />
+        <activity android:name=".settings.PreferencesMatchesActivity" />
+        <service
+            android:name=".util.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

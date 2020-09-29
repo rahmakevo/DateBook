@@ -15,7 +15,9 @@ import android.widget.ProgressBar;
 
 import com.example.datebook.R;
 import com.example.datebook.adapter.ChatRecyclerViewAdapter;
+import com.example.datebook.adapter.NewMatchesRecyclerAdapter;
 import com.example.datebook.model.InitiateChatModel;
+import com.example.datebook.model.MatchModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,12 +31,15 @@ import java.util.List;
 public class ChatsFragment extends Fragment {
 
     private ProgressBar progressBar;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, recyclerViewMatches;
     private List<InitiateChatModel> modelList;
+    private List<MatchModel> matchModel;
+    private List<String> mFriendsIdList;
     private ChatRecyclerViewAdapter adapter;
+    private NewMatchesRecyclerAdapter matchesAdapter;
 
-    private FirebaseDatabase mChatDb;
-    private DatabaseReference mChatRef;
+    private FirebaseDatabase mChatDb, mMatchDb;
+    private DatabaseReference mChatRef, mMatchRef;
     private FirebaseAuth mAuth;
 
     public ChatsFragment() {
@@ -48,6 +53,8 @@ public class ChatsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mChatDb = FirebaseDatabase.getInstance();
         mChatRef = mChatDb.getReference();
+        mMatchDb = FirebaseDatabase.getInstance();
+        mMatchRef = mMatchDb.getReference();
     }
 
     @Override
@@ -60,6 +67,8 @@ public class ChatsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         recyclerView = mView.findViewById(R.id.chats_list);
+        recyclerViewMatches = mView.findViewById(R.id.matches_list);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -87,6 +96,130 @@ public class ChatsFragment extends Fragment {
 
             }
         });
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                getActivity().getApplicationContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        recyclerViewMatches.setHasFixedSize(true);
+        recyclerViewMatches.setLayoutManager(layoutManager);
+
+        matchModel = new ArrayList<>();
+        mMatchRef = mMatchRef.child("users").child("profile").child(mAuth.getCurrentUser().getUid());
+        mMatchRef.keepSynced(true);
+        mMatchRef.orderByValue();
+        mMatchRef.limitToFirst(50);
+        mMatchRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String mGender = snapshot.child("gender").getValue().toString();
+
+                if (mGender.equals("male")) {
+                    FirebaseDatabase mInitiateChatCheckDb = FirebaseDatabase.getInstance();
+                    DatabaseReference mInitiateChatCheckRef = mInitiateChatCheckDb.getReference();
+                    mInitiateChatCheckRef
+                            .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                            .child("initiateChat").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            mFriendsIdList = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                                mFriendsIdList.add(model.recipient_id);
+                            }
+
+                            System.out.println(mFriendsIdList.toString());
+
+                            // show female matches
+
+                            mMatchRef = mMatchDb.getReference().child("users").child("matches").child("female");
+                            mMatchRef.keepSynced(true);
+                            mMatchRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        matchModel.clear();
+                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
+                                        }
+
+                                        progressBar.setVisibility(View.GONE);
+                                        matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
+                                        recyclerViewMatches.setAdapter(matchesAdapter);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else if (mGender.equals("female")) {
+                    FirebaseDatabase mInitiateChatCheckDb = FirebaseDatabase.getInstance();
+                    DatabaseReference mInitiateChatCheckRef = mInitiateChatCheckDb.getReference();
+                    mInitiateChatCheckRef
+                            .child("users").child("chat").child(mAuth.getCurrentUser().getUid())
+                            .child("initiateChat").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            mFriendsIdList = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
+                                mFriendsIdList.add(model.recipient_id);
+                            }
+
+                            System.out.println(mFriendsIdList.toString());
+
+                            // show male matches
+                            matchModel.clear();
+                            mMatchRef = mMatchDb.getReference().child("users").child("matches").child("male");
+                            mMatchRef.keepSynced(true);
+                            mMatchRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        matchModel.clear();
+                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
+                                        }
+
+                                        progressBar.setVisibility(View.GONE);
+                                        matchesAdapter = new NewMatchesRecyclerAdapter(matchModel);
+                                        recyclerViewMatches.setAdapter(matchesAdapter);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         return mView;
     }

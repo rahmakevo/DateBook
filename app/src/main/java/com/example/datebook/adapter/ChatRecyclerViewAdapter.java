@@ -1,6 +1,7 @@
 package com.example.datebook.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.datebook.ui.MessageActivity;
 import com.example.datebook.R;
 import com.example.datebook.model.InitiateChatModel;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import spencerstudios.com.bungeelib.Bungee;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
     private List<InitiateChatModel> model;
@@ -66,6 +69,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
                     }
                 });
+
+        holder.itemView.setOnClickListener(view -> {
+            Intent mIntentMessage =  new Intent(context.getApplicationContext(), MessageActivity.class);
+            mIntentMessage.putExtra("recipient_id", initiateChatModel.recipient_id);
+            context.startActivity(mIntentMessage);
+            Bungee.slideLeft(context);
+        });
 
     }
 

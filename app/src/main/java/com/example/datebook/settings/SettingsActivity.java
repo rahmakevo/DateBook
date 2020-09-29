@@ -1,7 +1,8 @@
-package com.example.datebook;
+package com.example.datebook.settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,10 +11,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.datebook.ui.HomeActivity;
+import com.example.datebook.R;
 import com.example.datebook.adapter.SettingsListRecyclerView;
 import com.example.datebook.model.SettingsModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         RecyclerView mListSettings = findViewById(R.id.list_settings);
-        adapter = new SettingsListRecyclerView(modelList);
+        adapter = new SettingsListRecyclerView(modelList, getSupportFragmentManager());
         mListSettings.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         DividerItemDecoration itemDecor = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
@@ -89,6 +91,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         mListSettings.setAdapter(adapter);
         prepareSettingsData();
+
+        ConstraintLayout mLayoutProfile = findViewById(R.id.layout_profile);
+        mLayoutProfile.setOnClickListener(view -> {
+            Intent mIntent = new Intent(this, ProfileSettingsActivity.class);
+            startActivity(mIntent);
+            Bungee.slideLeft(this);
+        });
 
     }
 
@@ -106,6 +115,12 @@ public class SettingsActivity extends AppCompatActivity {
         modelList.add(model);
 
         model = new SettingsModel("Notifications", R.drawable.ic_notifications_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Match Preferences", R.drawable.ic_favorite_black_24dp);
+        modelList.add(model);
+
+        model = new SettingsModel("Invite a friend", R.drawable.ic_people_black_24dp);
         modelList.add(model);
 
         adapter.notifyDataSetChanged();

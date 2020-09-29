@@ -1,17 +1,22 @@
 package com.example.datebook.auth;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.datebook.R;
+import com.example.datebook.util.ApiService;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -41,6 +51,7 @@ public class CreateAccountTwo extends AppCompatActivity {
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mProfileDb;
     protected DatabaseReference mProfileRef;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     public CreateAccountTwo() {
         // Required empty public constructor
@@ -51,6 +62,7 @@ public class CreateAccountTwo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.fragment_create_account_two);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mAuth = FirebaseAuth.getInstance();
         mProfileDb = FirebaseDatabase.getInstance();
@@ -127,7 +139,8 @@ public class CreateAccountTwo extends AppCompatActivity {
                             });
 
                 } else if (isFemaleSelected) {
-                    mProfileRef.child("users").child("profile").child(mUser.getUid()).child("gender")
+                    mProfileRef
+                            .child("users").child("profile").child(mUser.getUid()).child("gender")
                             .setValue("female").addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Date objDate = new Date();
@@ -161,11 +174,103 @@ public class CreateAccountTwo extends AppCompatActivity {
         mImageBack.setOnClickListener(view -> {
             finishAffinity();
         });
+
+        fusedLocationProviderClient
+                .getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        getAddress(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                    } else {
+                        Toast.makeText(this, "location is null", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void getAddress(String valueOf, String valueOf1) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new getAddressResponse().execute(valueOf, valueOf1);
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finishAffinity();
+    }
+
+    private class getAddressResponse extends AsyncTask<String, String, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String lat = strings[0];
+            String lon = strings[1];
+
+            Log.v("lat", lat+lon);
+
+            ApiService apiService = new ApiService();
+            String response = apiService.AddressLookUp(lat, lon);
+
+            try {
+
+                JSONObject responseObject = new JSONObject(response);
+                String status = responseObject.getString("status");
+
+                if (!status.equals("REQUEST_DENIED") && status.equals("OK")) {
+                    JSONArray results = responseObject.getJSONArray("results");
+
+                    for (int i=0; i<results.length(); i++) {
+                        JSONObject resultsObject = results.getJSONObject(i);
+                        String formattedAddress = resultsObject.getString("formatted_address");
+
+                        String[] splitAddress = formattedAddress.split(",");
+                        ArrayList<String> listAddress = new ArrayList<>(Arrays.asList(splitAddress));
+                        String mCountry = listAddress.get(listAddress.size() - 1);
+                        String mLocality = listAddress.get(listAddress.size() - 3);
+
+                        Date date = new Date();
+
+                        HashMap<String, String> mAddressMap = new HashMap<>();
+                        mAddressMap.put("country", mCountry);
+                        mAddressMap.put("locality", mLocality);
+                        mAddressMap.put("lat", lat);
+                        mAddressMap.put("long", lon);
+                        mAddressMap.put("address_lookup_time", String.valueOf(date));
+
+                        if (isMaleSelected || isFemaleSelected) {
+                            if (isMaleSelected) {
+                                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                FirebaseUser mUser = mAuth.getCurrentUser();
+                                FirebaseDatabase mAddressDb = FirebaseDatabase.getInstance();
+                                DatabaseReference mAddressRef = mAddressDb.getReference();
+                                mAddressRef
+                                        .child("users").child("matches").child("male")
+                                        .child(mUser.getUid()).child("addressLookUp")
+                                        .setValue(mAddressMap).addOnSuccessListener(success -> {});
+                            } else if (isFemaleSelected) {
+                                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                FirebaseUser mUser = mAuth.getCurrentUser();
+                                FirebaseDatabase mAddressDb = FirebaseDatabase.getInstance();
+                                DatabaseReference mAddressRef = mAddressDb.getReference();
+                                mAddressRef
+                                        .child("users").child("matches").child("female")
+                                        .child(mUser.getUid()).child("addressLookUp")
+                                        .setValue(mAddressMap).addOnSuccessListener(success -> {});
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Log.v("response", response);
+
+            return null;
+        }
     }
 }
