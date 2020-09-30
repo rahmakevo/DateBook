@@ -65,6 +65,7 @@ public class MessageActivity extends AppCompatActivity {
 
         CircleImageView mImageRecipientProfile = findViewById(R.id.imageViewUserMessage);
         TextView mTextProfileName = findViewById(R.id.textViewNameMessage);
+        TextView mTextOnline = findViewById(R.id.textViewChatsOnline);
 
         mRecipientRef
                 .child("users").child("profile").child(recipient_id)
@@ -76,6 +77,17 @@ public class MessageActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_account_circle_black_24dp)
                         .into(mImageRecipientProfile);
                 mTextProfileName.setText(snapshot.child("publicName").getValue().toString());
+
+                if (snapshot.hasChild("userPresence")) {
+                    if (snapshot.child("userPresence").getValue().toString().equals("true")) {
+                        mTextOnline.setText("Online");
+                    } else {
+                        mTextOnline.setText("Offline");
+                    }
+                } else {
+                    mTextOnline.setText("Offline");
+                }
+
             }
 
             @Override
@@ -94,7 +106,7 @@ public class MessageActivity extends AppCompatActivity {
         mMessageList = findViewById(R.id.list_view_message);
         mMessageList.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(false);
         mMessageList.setLayoutManager(layoutManager);
 
         View rootView = findViewById(R.id.root_view);

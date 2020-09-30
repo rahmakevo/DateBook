@@ -1,10 +1,12 @@
 package com.example.datebook.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +57,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         // get recipient details
         mChatRef.child("users").child("profile").child(initiateChatModel.recipient_id)
                 .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("ResourceAsColor")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         holder.mChatPublicName.setText(snapshot.child("publicName").getValue().toString());
@@ -62,6 +65,16 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
                                 .placeholder(R.drawable.ic_account_circle_black_24dp)
                                 .into(holder.mImageChatAvatar);
+
+                        if (snapshot.hasChild("userPresence")) {
+                            if (!snapshot.child("userPresence").getValue().toString().equals("true")) {
+                                holder.mImageOnline.setBackgroundColor(R.color.colorHighlight);
+                            } else {
+                                holder.mImageOnline.setBackgroundColor(R.color.colorForestGreen);
+                            }
+                        } else {
+                            holder.mImageOnline.setBackgroundColor(R.color.colorHighlight);
+                        }
                     }
 
                     @Override
@@ -88,12 +101,14 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         private CircleImageView mImageChatAvatar;
         private TextView mChatPublicName;
         private TextView mCurrentSentMessage;
+        private ImageView mImageOnline;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mImageChatAvatar = itemView.findViewById(R.id.imageMessageProfile);
             mChatPublicName = itemView.findViewById(R.id.textMessageUserName);
             mCurrentSentMessage = itemView.findViewById(R.id.textMessageContext);
+            mImageOnline = itemView.findViewById(R.id.imageViewChatsOnline);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.datebook.R;
 import com.example.datebook.adapter.ChatRecyclerViewAdapter;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatsFragment extends Fragment {
@@ -38,13 +40,12 @@ public class ChatsFragment extends Fragment {
     private ChatRecyclerViewAdapter adapter;
     private NewMatchesRecyclerAdapter matchesAdapter;
 
-    private FirebaseDatabase mChatDb, mMatchDb;
-    private DatabaseReference mChatRef, mMatchRef;
+    private FirebaseDatabase mChatDb, mMatchDb, mMatchPrefDb;
+    private DatabaseReference mChatRef, mMatchRef, mMatchPrefRef;
     private FirebaseAuth mAuth;
 
-    public ChatsFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public ChatsFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,8 @@ public class ChatsFragment extends Fragment {
         mChatRef = mChatDb.getReference();
         mMatchDb = FirebaseDatabase.getInstance();
         mMatchRef = mMatchDb.getReference();
+        mMatchPrefDb = FirebaseDatabase.getInstance();
+        mMatchPrefRef = mMatchPrefDb.getReference();
     }
 
     @Override
@@ -63,6 +66,7 @@ public class ChatsFragment extends Fragment {
         // Inflate the layout for this fragment
         View mView = inflater.inflate(R.layout.fragment_chats, container, false);
 
+        TextView mTextNoMatches = mView.findViewById(R.id.textMatchesAvailable);
         progressBar = mView.findViewById(R.id.progressChats);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -123,15 +127,42 @@ public class ChatsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             mFriendsIdList = new ArrayList<>();
+                            mFriendsIdList.clear();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
                                 mFriendsIdList.add(model.recipient_id);
                             }
 
-                            System.out.println(mFriendsIdList.toString());
+                            // create MatchPrefSettings
+                            HashMap<String, String> mMatchPrefMap = new HashMap<>();
+                            mMatchPrefMap.put("discovery", "true");
+                            mMatchPrefMap.put("matchGenderType", "female");
+                            mMatchPrefMap.put("agePref", "18");
+                            mMatchPrefMap.put("countryFilter", "false");
+                            mMatchPrefMap.put("localityFilter", "false");
+
+                            mMatchPrefRef
+                                    .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                                    .child("settings").child("matchPreferences")
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (!snapshot.exists()) {
+                                                mMatchPrefRef.child("users").child("profile")
+                                                        .child(mAuth.getCurrentUser().getUid())
+                                                        .child("settings").child("matchPreferences")
+                                                        .setValue(mMatchPrefMap).addOnSuccessListener(task -> {});
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
 
                             // show female matches
-
+                            matchModel.clear();
                             mMatchRef = mMatchDb.getReference().child("users").child("matches").child("female");
                             mMatchRef.keepSynced(true);
                             mMatchRef.addValueEventListener(new ValueEventListener() {
@@ -139,9 +170,15 @@ public class ChatsFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         matchModel.clear();
-                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                            matchModel.add(model);
+                                        for (int i = 0; i < mFriendsIdList.size(); i++) {
+                                            if (!snapshot.hasChild(mFriendsIdList.get(i))) {
+                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                                    matchModel.add(model);
+                                                }
+                                            } else {
+                                                mTextNoMatches.setVisibility(View.VISIBLE);
+                                            }
                                         }
 
                                         progressBar.setVisibility(View.GONE);
@@ -171,12 +208,39 @@ public class ChatsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             mFriendsIdList = new ArrayList<>();
+                            mFriendsIdList.clear();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 InitiateChatModel model = dataSnapshot.getValue(InitiateChatModel.class);
                                 mFriendsIdList.add(model.recipient_id);
                             }
 
-                            System.out.println(mFriendsIdList.toString());
+                            // create MatchPrefSettings
+                            HashMap<String, String> mMatchPrefMap = new HashMap<>();
+                            mMatchPrefMap.put("discovery", "true");
+                            mMatchPrefMap.put("matchGenderType", "male");
+                            mMatchPrefMap.put("agePref", "18");
+                            mMatchPrefMap.put("countryFilter", "false");
+                            mMatchPrefMap.put("localityFilter", "false");
+
+                            mMatchPrefRef
+                                    .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                                    .child("settings").child("matchPreferences")
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (!snapshot.exists()) {
+                                                mMatchPrefRef.child("users").child("profile")
+                                                        .child(mAuth.getCurrentUser().getUid())
+                                                        .child("settings").child("matchPreferences")
+                                                        .setValue(mMatchPrefMap).addOnSuccessListener(task -> {});
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
 
                             // show male matches
                             matchModel.clear();
@@ -187,9 +251,15 @@ public class ChatsFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         matchModel.clear();
-                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                            matchModel.add(model);
+                                        for (int i = 0; i < mFriendsIdList.size(); i++) {
+                                            if (!snapshot.hasChild(mFriendsIdList.get(i))) {
+                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                                    matchModel.add(model);
+                                                }
+                                            } else {
+                                                mTextNoMatches.setVisibility(View.VISIBLE);
+                                            }
                                         }
 
                                         progressBar.setVisibility(View.GONE);

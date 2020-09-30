@@ -78,6 +78,33 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(mIntent);
             Bungee.slideLeft(this);
         });
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase mUserPrivacySettingsDb = FirebaseDatabase.getInstance();
+        DatabaseReference mUserPrivacySettingsRef = mUserPrivacySettingsDb.getReference();
+        mUserPrivacySettingsRef
+                .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                .child("settings").child("privacySettings").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    HashMap<String, String> mUserPrivacySettingsMap = new HashMap<>();
+                    mUserPrivacySettingsMap.put("lastSeen", "Everyone");
+                    mUserPrivacySettingsMap.put("profileImage", "Everyone");
+                    mUserPrivacySettingsMap.put("status", "Everyone");
+
+                    mUserPrivacySettingsRef
+                            .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                            .child("settings").child("privacySettings").setValue(mUserPrivacySettingsMap)
+                            .addOnSuccessListener(task -> {});
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

@@ -138,11 +138,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toEndOf="@+id/imageViewUserMessage"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:text="online"
+            android:textSize="12sp"
+            android:id="@+id/textViewChatsOnline"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewUserMessage"/>
 

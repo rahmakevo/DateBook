@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:background="@color/colorForestGreen"/>
+            android:background="@color/colorForestGreen"
+            android:id="@+id/imageCallsOnline"/>
 
     </androidx.cardview.widget.CardView>
 
