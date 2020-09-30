@@ -60,7 +60,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_camera_alt_black_24dp"
+            android:src="@drawable/photo_camera"
             app:layout_constraintTop_toTopOf="@+id/circleImageViewThumbProfile"
             app:layout_constraintEnd_toEndOf="@+id/circleImageViewThumbProfile"
             android:layout_marginTop="65dp"
