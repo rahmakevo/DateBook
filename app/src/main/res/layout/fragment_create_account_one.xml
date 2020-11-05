@@ -119,6 +119,70 @@
             android:layout_height="wrap_content"
             app:SpinKit_Color="@color/colorPrimary" />
 
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonProceedName"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/baseline_how_to_reg_black_24dp"
+            android:id="@+id/imageViewWhatIsRequired"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintStart_toEndOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintTop_toTopOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewWhatIsRequired"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="What is required?"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintStart_toStartOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewWhatIsRequired"
+            android:id="@+id/imageRequiredOne"
+            android:src="@mipmap/ic_bullet"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/imageRequiredOne"
+            app:layout_constraintTop_toTopOf="@+id/imageRequiredOne"
+            app:layout_constraintBottom_toBottomOf="@+id/imageRequiredOne"
+            android:text="Must be at most 6 characters long"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:id="@+id/textRequiredOne"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintStart_toStartOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewWhatIsRequired"
+            app:layout_constraintTop_toBottomOf="@+id/imageRequiredOne"
+            android:layout_marginTop="16dp"
+            android:src="@mipmap/ic_bullet"
+            android:id="@+id/imageRequiredTwo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/imageRequiredTwo"
+            app:layout_constraintTop_toTopOf="@+id/imageRequiredTwo"
+            app:layout_constraintBottom_toBottomOf="@+id/imageRequiredTwo"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="Must contain a special character(e.g. !@#$)"
+            android:id="@+id/textRequiredTwo"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

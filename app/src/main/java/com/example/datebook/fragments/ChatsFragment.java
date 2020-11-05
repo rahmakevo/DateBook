@@ -19,6 +19,7 @@ import com.example.datebook.adapter.ChatRecyclerViewAdapter;
 import com.example.datebook.adapter.NewMatchesRecyclerAdapter;
 import com.example.datebook.model.InitiateChatModel;
 import com.example.datebook.model.MatchModel;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +44,7 @@ public class ChatsFragment extends Fragment {
     private FirebaseDatabase mChatDb, mMatchDb, mMatchPrefDb;
     private DatabaseReference mChatRef, mMatchRef, mMatchPrefRef;
     private FirebaseAuth mAuth;
+    private AdView adView;
 
     // Required empty public constructor
     public ChatsFragment() { }
@@ -170,15 +172,9 @@ public class ChatsFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         matchModel.clear();
-                                        for (int i = 0; i < mFriendsIdList.size(); i++) {
-                                            if (!snapshot.hasChild(mFriendsIdList.get(i))) {
-                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                                    matchModel.add(model);
-                                                }
-                                            } else {
-                                                mTextNoMatches.setVisibility(View.VISIBLE);
-                                            }
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
                                         }
 
                                         progressBar.setVisibility(View.GONE);
@@ -251,15 +247,9 @@ public class ChatsFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         matchModel.clear();
-                                        for (int i = 0; i < mFriendsIdList.size(); i++) {
-                                            if (!snapshot.hasChild(mFriendsIdList.get(i))) {
-                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                    MatchModel model = dataSnapshot.getValue(MatchModel.class);
-                                                    matchModel.add(model);
-                                                }
-                                            } else {
-                                                mTextNoMatches.setVisibility(View.VISIBLE);
-                                            }
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            MatchModel model = dataSnapshot.getValue(MatchModel.class);
+                                            matchModel.add(model);
                                         }
 
                                         progressBar.setVisibility(View.GONE);
@@ -292,5 +282,10 @@ public class ChatsFragment extends Fragment {
 
 
         return mView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

@@ -1,15 +1,19 @@
 package com.example.datebook.auth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.datebook.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -18,6 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import spencerstudios.com.bungeelib.Bungee;
 
@@ -39,6 +46,12 @@ public class CreateAccountOne extends AppCompatActivity {
         mProfileDb = FirebaseDatabase.getInstance();
         mProfileRef = mProfileDb.getReference();
 
+        ImageView imageRequiredOne = findViewById(R.id.imageRequiredOne);
+        TextView textViewRequiredOne = findViewById(R.id.textRequiredOne);
+
+        ImageView imageRequiredTwo = findViewById(R.id.imageRequiredTwo);
+        TextView textViewRequiredTwo = findViewById(R.id.textRequiredTwo);
+
         ImageView mBackPressed = findViewById(R.id.createAccountOneBackButton);
         mBackPressed.setOnClickListener(v -> {
             finishAffinity();
@@ -57,7 +70,7 @@ public class CreateAccountOne extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
-
+            
             @Override
             public void afterTextChanged(Editable s) {
                 mProfileNameTextLayout.setError("");

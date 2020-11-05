@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -170,6 +171,29 @@ public class MessageActivity extends AppCompatActivity {
                         });
             }
         });
+
+        ImageView mVideoCall = findViewById(R.id.startVideoCallUserMessage);
+        mVideoCall.setOnClickListener(view -> {
+            mRecipientRef
+                    .child("users").child("calls").child(mAuth.getCurrentUser().getUid())
+                    .child("initiateCall").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.hasChild(recipient_id)) {
+                        Intent mIntent = new Intent(MessageActivity.this, CallingActivity.class);
+                        mIntent.putExtra("caller_id", mAuth.getCurrentUser().getUid());
+                        mIntent.putExtra("recipient_id", recipient_id);
+                        startActivity(mIntent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
+
     }
 
     private void readMessages(String recipientId) {

@@ -14,6 +14,10 @@ import com.example.datebook.R;
 import com.example.datebook.adapter.ViewPagerFragmentAdapter;
 import com.example.datebook.settings.SettingsActivity;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +40,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        AdView adView = findViewById(R.id.adView);
+
+        MobileAds.initialize(this, initializationStatus -> { });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         managePresence();
 
