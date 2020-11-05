@@ -1,10 +1,12 @@
 package com.example.datebook.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.datebook.ui.MatchProfileActivity;
 import com.example.datebook.R;
 import com.example.datebook.model.MatchModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,6 +30,8 @@ import spencerstudios.com.bungeelib.Bungee;
 public class NewMatchesRecyclerAdapter extends RecyclerView.Adapter<NewMatchesRecyclerAdapter.ViewHolder> {
     private List<MatchModel> matchModel;
     private Context context;
+    private FirebaseDatabase mMatchProfileDb;
+    private DatabaseReference mMatchProfileRef;
 
     public NewMatchesRecyclerAdapter(List<MatchModel> matchModel) {
         this.matchModel = matchModel;
@@ -52,6 +61,32 @@ public class NewMatchesRecyclerAdapter extends RecyclerView.Adapter<NewMatchesRe
             context.startActivity(mIntent);
             Bungee.slideLeft(context);
         });
+
+        mMatchProfileDb = FirebaseDatabase.getInstance();
+        mMatchProfileRef = mMatchProfileDb.getReference();
+        mMatchProfileRef.child("users").child("profile").child(model.user_id)
+                .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChild("userPresence")) {
+                            if (!snapshot.child("userPresence").getValue().toString().equals("true")) {
+                                holder.mImageMatchOffline.setBackgroundColor(R.color.colorHighlight);
+                            } else {
+                                holder.mImageMatchOffline.setBackgroundColor(R.color.colorForestGreen);
+                            }
+                        } else {
+                            holder.mImageMatchOffline.setBackgroundColor(R.color.colorHighlight);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
     }
 
     @Override
@@ -62,10 +97,12 @@ public class NewMatchesRecyclerAdapter extends RecyclerView.Adapter<NewMatchesRe
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView mImageProfile;
         TextView mTextProfile;
+        ImageView mImageMatchOffline;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageProfile = itemView.findViewById(R.id.imageViewMatchProfile);
             mTextProfile = itemView.findViewById(R.id.textViewMatchProfileName);
+            mImageMatchOffline = itemView.findViewById(R.id.imageViewMatchOffline);
         }
     }
 }

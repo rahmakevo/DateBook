@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -65,6 +66,7 @@ public class MessageActivity extends AppCompatActivity {
 
         CircleImageView mImageRecipientProfile = findViewById(R.id.imageViewUserMessage);
         TextView mTextProfileName = findViewById(R.id.textViewNameMessage);
+        TextView mTextOnline = findViewById(R.id.textViewChatsOnline);
 
         mRecipientRef
                 .child("users").child("profile").child(recipient_id)
@@ -76,6 +78,17 @@ public class MessageActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_account_circle_black_24dp)
                         .into(mImageRecipientProfile);
                 mTextProfileName.setText(snapshot.child("publicName").getValue().toString());
+
+                if (snapshot.hasChild("userPresence")) {
+                    if (snapshot.child("userPresence").getValue().toString().equals("true")) {
+                        mTextOnline.setText("Online");
+                    } else {
+                        mTextOnline.setText("Offline");
+                    }
+                } else {
+                    mTextOnline.setText("Offline");
+                }
+
             }
 
             @Override
@@ -94,7 +107,7 @@ public class MessageActivity extends AppCompatActivity {
         mMessageList = findViewById(R.id.list_view_message);
         mMessageList.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(false);
         mMessageList.setLayoutManager(layoutManager);
 
         View rootView = findViewById(R.id.root_view);
@@ -158,6 +171,29 @@ public class MessageActivity extends AppCompatActivity {
                         });
             }
         });
+
+        ImageView mVideoCall = findViewById(R.id.startVideoCallUserMessage);
+        mVideoCall.setOnClickListener(view -> {
+            mRecipientRef
+                    .child("users").child("calls").child(mAuth.getCurrentUser().getUid())
+                    .child("initiateCall").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.hasChild(recipient_id)) {
+                        Intent mIntent = new Intent(MessageActivity.this, CallingActivity.class);
+                        mIntent.putExtra("caller_id", mAuth.getCurrentUser().getUid());
+                        mIntent.putExtra("recipient_id", recipient_id);
+                        startActivity(mIntent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
+
     }
 
     private void readMessages(String recipientId) {

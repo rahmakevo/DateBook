@@ -14,6 +14,10 @@ import com.example.datebook.R;
 import com.example.datebook.adapter.ViewPagerFragmentAdapter;
 import com.example.datebook.settings.SettingsActivity;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +40,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        AdView adView = findViewById(R.id.adView);
+
+        MobileAds.initialize(this, initializationStatus -> { });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         managePresence();
 
@@ -77,6 +87,33 @@ public class HomeActivity extends AppCompatActivity {
             Intent mIntent = new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(mIntent);
             Bungee.slideLeft(this);
+        });
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase mUserPrivacySettingsDb = FirebaseDatabase.getInstance();
+        DatabaseReference mUserPrivacySettingsRef = mUserPrivacySettingsDb.getReference();
+        mUserPrivacySettingsRef
+                .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                .child("settings").child("privacySettings").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    HashMap<String, String> mUserPrivacySettingsMap = new HashMap<>();
+                    mUserPrivacySettingsMap.put("lastSeen", "Everyone");
+                    mUserPrivacySettingsMap.put("profileImage", "Everyone");
+                    mUserPrivacySettingsMap.put("status", "Everyone");
+
+                    mUserPrivacySettingsRef
+                            .child("users").child("profile").child(mAuth.getCurrentUser().getUid())
+                            .child("settings").child("privacySettings").setValue(mUserPrivacySettingsMap)
+                            .addOnSuccessListener(task -> {});
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
     }
 

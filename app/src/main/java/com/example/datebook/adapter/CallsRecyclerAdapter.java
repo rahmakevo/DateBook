@@ -1,9 +1,12 @@
 package com.example.datebook.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +55,7 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
         holder.mVideoProfileDate.setText(chatModel.date);
         mCallsRef.child("users").child("profile").child(chatModel.recipient_id)
                 .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("ResourceAsColor")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         holder.mVideoProfileName.setText(snapshot.child("publicName").getValue().toString());
@@ -59,6 +63,16 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
                         Picasso.get().load(snapshot.child("publicThumbnail").getValue().toString())
                                 .placeholder(R.drawable.ic_account_circle_black_24dp)
                                 .into(holder.mVideoImageProfile);
+
+                        if (snapshot.hasChild("userPresence")) {
+                            if (!snapshot.child("userPresence").getValue().toString().equals("true")) {
+                                holder.mImageOnline.setBackgroundColor(R.color.colorHighlight);
+                            } else {
+                                holder.mImageOnline.setBackgroundColor(R.color.colorForestGreen);
+                            }
+                        } else {
+                            holder.mImageOnline.setBackgroundColor(R.color.colorHighlight);
+                        }
                     }
 
                     @Override
@@ -66,8 +80,6 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
 
                     }
                 });
-
-
 
     }
 
@@ -80,11 +92,13 @@ public class CallsRecyclerAdapter extends RecyclerView.Adapter<CallsRecyclerAdap
         private CircleImageView mVideoImageProfile;
         private TextView mVideoProfileName;
         private TextView mVideoProfileDate;
+        private ImageView mImageOnline;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mVideoImageProfile = itemView.findViewById(R.id.imageVideoCallProfile);
             mVideoProfileName = itemView.findViewById(R.id.textVideoCallUserName);
             mVideoProfileDate = itemView.findViewById(R.id.textVideoCallDate);
+            mImageOnline = itemView.findViewById(R.id.imageCallsOnline);
         }
     }
 }

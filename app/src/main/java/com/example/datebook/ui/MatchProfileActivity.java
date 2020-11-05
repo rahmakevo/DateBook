@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.datebook.R;
 import com.example.datebook.adapter.SliderAdapterExample;
 import com.example.datebook.model.ProfileImageModel;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -233,6 +232,14 @@ public class MatchProfileActivity extends AppCompatActivity {
                         }
             });
 
+        });
+
+        CircleImageView mImageViewVideoCall = findViewById(R.id.imageViewInitiateVideoCallWithMatch);
+        mImageViewVideoCall.setOnClickListener(view -> {
+            Intent mIntent = new Intent(MatchProfileActivity.this, CallingActivity.class);
+            mIntent.putExtra("caller_id", mAuth.getCurrentUser().getUid());
+            mIntent.putExtra("recipient_id", user_id);
+            startActivity(mIntent);
         });
 
     }

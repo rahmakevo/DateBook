@@ -18,9 +18,14 @@
     <string name="status">Hi there, I\'m using DateBook</string>
     <string name="value_true">true</string>
     <string name="select_gender">Select Gender</string>
+    <string name="banner_ad_unit_id">ca-app-pub-4452099359708051/6898833732</string>
     <string name="not_gender_selected">Dear Customer, Kindly select one image for your Gender</string>
     <string name="select_dob">Select Date Of Birth</string>
-
+    <string name="agora_app_id">aed5bd8dc4574ff9a1b5f270b1660295</string>
+    <!-- Obtain a temp Access Token at https://dashboard.agora.io -->
+    <!-- You will need to deploy your own token server for production release -->
+    <!-- Leave this value empty if Security keys/Token is not enabled for your project -->
+    <string name="agora_access_token">006aed5bd8dc4574ff9a1b5f270b1660295IAC+xqSv31PHlQ5m6KheAKZnptcvDtdn/6fP0ih9bp+AKeho7U4AAAAAEADXbN9KpA7SXgEAAQCkDtJe</string>
     <string name="default_notification_channel_id">dateBook-001</string>
 
     <string-array name="language_array">

@@ -20,4 +20,5 @@
     <color name="colorHomeBg">#757575</color>
     <color name="colorGreyLight">#F1F1F1</color>
     <color name="colorForestGreen">#228B22 </color>
+    <color name="remoteBackground">#484258</color>
 </resources>
